@@ -1,2 +1,0 @@
-import { Component, inject, signal } from '@angular/core'; import { CommonModule } from '@angular/common'; import { ProductCardComponent } from '../../components/product-card/product-card.component'; import { CatalogService } from '../../services/catalog.service';
-@Component({selector:'app-shop',standalone:true,imports:[CommonModule,ProductCardComponent],templateUrl:'./shop.component.html'}) export class ShopComponent{catalog=inject(CatalogService);cat=signal('All'); get list(){return this.catalog.products.filter(p=>this.cat()==='All'||p.category===this.cat())}}

@@ -126,7 +126,7 @@ nav a.active:after {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: url("assets/images/hero-reference.jpg") center/cover;
+  background: var(--img) center/cover;
   opacity: 0.16;
   mix-blend-mode: multiply;
 }
@@ -522,10 +522,10 @@ nav a.active:after {
   max-width: 430px;
 }
 .gift {
-  background-image: url("assets/images/gifting.jpg");
+  background-image: var(--img);
 }
 .seasonal {
-  background-image: url("assets/images/range-reference.jpg");
+  background-image: var(--img);
 }
 .journal-grid {
   display: grid;

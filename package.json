@@ -1,30 +1,26 @@
 {
-  "name": "abhimanyu-organics-angular-immersive",
+  "name": "abhimanyu-organics-react",
   "version": "1.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve --open",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "build:pages": "ng build --configuration production && cp dist/abhimanyu-organics/browser/index.html dist/abhimanyu-organics/browser/404.html && touch dist/abhimanyu-organics/browser/.nojekyll"
-  },
   "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite --open",
+    "build": "tsc -b && vite build",
+    "build:pages": "npm run build && cp dist/index.html dist/404.html && touch dist/.nojekyll",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit"
+  },
   "dependencies": {
-    "@angular/animations": "^20.2.0",
-    "@angular/common": "^20.2.0",
-    "@angular/compiler": "^20.2.0",
-    "@angular/core": "^20.2.0",
-    "@angular/forms": "^20.2.0",
-    "@angular/platform-browser": "^20.2.0",
-    "@angular/router": "^20.2.0",
-    "rxjs": "~7.8.2",
-    "tslib": "^2.8.1",
-    "zone.js": "~0.15.0"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.2.0",
-    "@angular/cli": "^20.2.0",
-    "@angular/compiler-cli": "^20.2.0",
-    "typescript": "~5.9.2"
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.0"
   }
 }

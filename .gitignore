@@ -1,9 +1,6 @@
-# Angular / Node
+# Node
 /node_modules
 /dist
-/.angular
-/tmp
-/out-tsc
 
 # Environment
 .env

@@ -1,1 +1,0 @@
-import { Component, signal } from '@angular/core'; import { CommonModule } from '@angular/common'; import { FormsModule } from '@angular/forms'; @Component({selector:'app-bulk',standalone:true,imports:[CommonModule,FormsModule],templateUrl:'./bulk.component.html'}) export class BulkComponent{sent=signal(false)}
