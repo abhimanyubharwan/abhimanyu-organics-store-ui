@@ -1,0 +1,1 @@
+import { Component, inject } from '@angular/core'; import { ActivatedRoute, RouterLink } from '@angular/router'; @Component({selector:'app-blog-detail',standalone:true,imports:[RouterLink],templateUrl:'./blog-detail.component.html'}) export class BlogDetailComponent{slug=inject(ActivatedRoute).snapshot.paramMap.get('slug')||''}

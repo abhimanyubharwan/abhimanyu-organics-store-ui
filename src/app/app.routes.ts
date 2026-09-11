@@ -1,0 +1,30 @@
+import { Routes } from "@angular/router";
+import { HomeComponent } from "./pages/home/home.component";
+import { ShopComponent } from "./pages/shop/shop.component";
+import { ProductComponent } from "./pages/product/product.component";
+import { StoryComponent } from "./pages/story/story.component";
+import { GiftingComponent } from "./pages/gifting/gifting.component";
+import { BlogComponent } from "./pages/blog/blog.component";
+import { BlogDetailComponent } from "./pages/blog-detail/blog-detail.component";
+import { GalleryComponent } from "./pages/gallery/gallery.component";
+import { BulkComponent } from "./pages/bulk/bulk.component";
+import { CartComponent } from "./pages/cart/cart.component";
+import { AccountComponent } from "./pages/account/account.component";
+import { WishlistComponent } from "./pages/wishlist/wishlist.component";
+import { SeasonalComponent } from "./pages/seasonal/seasonal.component";
+export const routes: Routes = [
+  { path: "", component: HomeComponent },
+  { path: "shop", component: ShopComponent },
+  { path: "product/:id", component: ProductComponent },
+  { path: "our-story", component: StoryComponent },
+  { path: "gifting", component: GiftingComponent },
+  { path: "blog", component: BlogComponent },
+  { path: "blog/:slug", component: BlogDetailComponent },
+  { path: "gallery", component: GalleryComponent },
+  { path: "bulk", component: BulkComponent },
+  { path: "cart", component: CartComponent },
+  { path: "account", component: AccountComponent },
+  { path: "wishlist", component: WishlistComponent },
+  { path: "seasonal", component: SeasonalComponent },
+  { path: "**", redirectTo: "" },
+];

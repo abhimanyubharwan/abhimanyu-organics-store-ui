@@ -1,0 +1,1 @@
+import { Component } from '@angular/core'; import { RouterLink } from '@angular/router'; @Component({selector:'app-gifting',standalone:true,imports:[RouterLink],templateUrl:'./gifting.component.html'}) export class GiftingComponent{}
