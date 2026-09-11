@@ -1,3 +1,3 @@
-import { Component, inject, signal } from '@angular/core'; import { RouterLink } from '@angular/router'; import { CatalogService } from '../../services/catalog.service'; import { ProductCardComponent } from '../../components/product-card/product-card.component';
-@Component({selector:'app-home',standalone:true,imports:[RouterLink,ProductCardComponent],templateUrl:'./home.component.html'})
+import { Component, inject, signal } from '@angular/core'; import { CommonModule } from '@angular/common'; import { RouterLink } from '@angular/router'; import { CatalogService } from '../../services/catalog.service'; import { ProductCardComponent } from '../../components/product-card/product-card.component';
+@Component({selector:'app-home',standalone:true,imports:[CommonModule,RouterLink,ProductCardComponent],templateUrl:'./home.component.html'})
 export class HomeComponent{catalog=inject(CatalogService);filter=signal('All'); get best(){return this.catalog.products.filter(p=>this.filter()==='All'||p.category===this.filter()).slice(0,5)}; get honeys(){return this.catalog.products.filter(p=>p.category==='Honey')}}

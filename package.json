@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve --open",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "build:pages": "ng build --configuration production && cp dist/abhimanyu-organics/browser/index.html dist/abhimanyu-organics/browser/404.html && touch dist/abhimanyu-organics/browser/.nojekyll"
   },
   "private": true,
   "dependencies": {
