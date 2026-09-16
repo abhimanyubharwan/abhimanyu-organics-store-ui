@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
-import { asset } from "../asset";
+import Photo from "../components/Photo";
+import { media } from "../media";
 
 export default function BlogDetail() {
   const { slug = "" } = useParams();
@@ -12,7 +13,7 @@ export default function BlogDetail() {
         A practical, farm-first guide designed for customers who want to
         understand honey, bees and natural products—not just buy them.
       </p>
-      <img src={asset("assets/images/farm-reference.jpg")} alt="" />
+      <Photo media={media.jarsRosewood} alt="" sizes="(max-width: 820px) 100vw, 780px" priority />
       <h2>What happens at the source</h2>
       <p>
         Every honey season begins with flowering crops and forage. Bee colonies

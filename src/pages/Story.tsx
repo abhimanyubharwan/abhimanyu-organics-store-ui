@@ -1,10 +1,10 @@
-import { asset } from "../asset";
+import StoryFilm from "../components/StoryFilm";
 
 export default function Story() {
   return (
     <>
       <section className="page-hero story-hero">
-        <span>Our Story</span>
+        <span className="eyebrow marked">Our Story</span>
         <h1>Beekeeping first. Brand second.</h1>
         <p>
           From generations around farms and bee boxes to a modern
@@ -12,7 +12,7 @@ export default function Story() {
         </p>
       </section>
       <section className="section shell story-editorial">
-        <img src={asset("assets/images/farm-reference.jpg")} alt="" />
+        <StoryFilm start="when-visible" sizes="(max-width: 980px) 70vw, 420px" />
         <div>
           <span className="eyebrow">Why we do it</span>
           <h2>Pure products, better farms, healthier tomorrow.</h2>

@@ -1,19 +1,33 @@
 import { Link } from "react-router-dom";
+import { BeeMark } from "./Icons";
 
 export default function Footer() {
   return (
     <footer>
+      <div className="foot-crown" aria-hidden="true">
+        <i />
+        <BeeMark className="foot-crown-mark" />
+        <i />
+      </div>
       <div className="shell footer-grid">
         <div>
-          <div className="brand footbrand">
-            ✦ <b>ABHIMANYU ORGANICS</b>
+          <div className="foot-brand">
+            <BeeMark className="brand-mark" />
+            <span className="brand-name">
+              <b>Abhimanyu</b>
+              <b>Organics</b>
+              <small>Goodness lives here</small>
+            </span>
           </div>
-          <p>Pure products. Better people. A healthier tomorrow.</p>
+          <p>
+            Raw, unprocessed honey from our own bee farms — plus the pantry
+            essentials and seasonal harvests that grow alongside them.
+          </p>
         </div>
         <div>
           <h4>Shop</h4>
-          <Link to="/shop">Honey</Link>
-          <Link to="/shop">Ghee &amp; Oils</Link>
+          <Link to="/shop?cat=Honey">Honey</Link>
+          <Link to="/shop?cat=Ghee %26 Oils">Ghee &amp; Oils</Link>
           <Link to="/seasonal">Seasonal Fruits</Link>
           <Link to="/gifting">Gifting</Link>
         </div>
@@ -27,11 +41,12 @@ export default function Footer() {
           <h4>Business</h4>
           <Link to="/bulk">Bulk Orders</Link>
           <Link to="/bulk">Supplier Enquiry</Link>
-          <p>9050262600</p>
+          <a href="tel:+919050262600">+91 90502 62600</a>
         </div>
       </div>
       <div className="shell copyright">
-        © 2026 Abhimanyu Organics · Gurgaon, Haryana
+        <span>© 2026 Abhimanyu Organics · Gurgaon &amp; Hisar, Haryana</span>
+        <span>Pure products. Better people. A healthier tomorrow.</span>
       </div>
     </footer>
   );

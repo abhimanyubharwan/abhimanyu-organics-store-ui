@@ -25,7 +25,7 @@ export default function Shop() {
   return (
     <>
       <section className="page-hero">
-        <span>Shop</span>
+        <span className="eyebrow marked">Shop</span>
         <h1>Pure products from farms &amp; hives.</h1>
         <p>
           Honey stays at the heart of our range, complemented by natural pantry

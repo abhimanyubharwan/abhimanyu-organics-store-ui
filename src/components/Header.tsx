@@ -1,54 +1,100 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useCatalog } from "../catalog";
+import { BeeMark, Cart, Heart, Menu, User } from "./Icons";
+
+const LINKS: [string, string][] = [
+  ["/", "Home"],
+  ["/shop", "Shop"],
+  ["/shop?cat=Honey", "Honey"],
+  ["/seasonal", "Seasonal Fruits"],
+  ["/gifting", "Gifting"],
+  ["/our-story", "Our Story"],
+  ["/blog", "Journal"],
+  ["/gallery", "Gallery"],
+  ["/bulk", "Bulk Orders"],
+];
 
 export default function Header() {
   const { cart, wishlist } = useCatalog();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        setScrolled(window.scrollY > 40);
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  useEffect(() => setMenuOpen(false), [pathname]);
 
   return (
-    <>
+    <div className={scrolled ? "site-head solid" : "site-head"}>
       <div className="topbar">
-        <span>✦ Free shipping on orders above ₹999</span>
-        <span>100% Natural · Lab Tested · Pan India Delivery</span>
-        <span>☎ +91 90502 62600</span>
+        <div className="shell topbar-inner">
+          <span>Free shipping on orders above ₹999</span>
+          <span className="topbar-mid">100% Natural · Lab Tested · Pan India Delivery</span>
+          <a href="tel:+919050262600">+91 90502 62600</a>
+        </div>
       </div>
+
       <header className="nav shell">
-        <Link to="/" className="brand">
-          <span className="bee">✦</span>
-          <b>
-            ABHIMANYU
-            <br />
-            ORGANICS
-          </b>
-          <small>Goodness Lives Here</small>
+        <Link to="/" className="brand" aria-label="Abhimanyu Organics, home">
+          <BeeMark className="brand-mark" />
+          <span className="brand-name">
+            <b>Abhimanyu</b>
+            <b>Organics</b>
+            <small>Goodness lives here</small>
+          </span>
         </Link>
-        <nav className={menuOpen ? "open" : undefined}>
-          <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : undefined)}>
-            Home
-          </NavLink>
-          <Link to="/shop">Shop</Link>
-          <Link to="/shop?cat=Honey">Honey</Link>
-          <Link to="/seasonal">Seasonal Fruits</Link>
-          <Link to="/gifting">Gifting</Link>
-          <Link to="/our-story">Our Story</Link>
-          <Link to="/blog">Blog</Link>
-          <Link to="/gallery">Gallery</Link>
-          <Link to="/bulk">Bulk Orders</Link>
+
+        <nav className={menuOpen ? "open" : undefined} aria-label="Main">
+          {LINKS.map(([to, label]) => (
+            <NavLink
+              key={label}
+              to={to}
+              end={to === "/"}
+              className={({ isActive }) => (isActive ? "active" : undefined)}
+            >
+              {label}
+            </NavLink>
+          ))}
         </nav>
+
         <div className="nav-actions">
-          <Link to="/wishlist">
-            ♡ <i>{wishlist.length}</i>
+          <Link className="icon-btn" to="/wishlist" aria-label={`Wishlist, ${wishlist.length} items`}>
+            <Heart />
+            {wishlist.length > 0 && <i>{wishlist.length}</i>}
           </Link>
-          <Link to="/account">♙</Link>
-          <Link to="/cart">
-            🛒 <i>{cart.length}</i>
+          <Link className="icon-btn" to="/account" aria-label="Account">
+            <User />
           </Link>
-          <button className="hamb" onClick={() => setMenuOpen((v) => !v)}>
-            ☰
+          <Link className="icon-btn" to="/cart" aria-label={`Cart, ${cart.length} items`}>
+            <Cart />
+            {cart.length > 0 && <i>{cart.length}</i>}
+          </Link>
+          <button
+            className="icon-btn hamb"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-label="Menu"
+          >
+            <Menu />
           </button>
         </div>
       </header>
-    </>
+    </div>
   );
 }

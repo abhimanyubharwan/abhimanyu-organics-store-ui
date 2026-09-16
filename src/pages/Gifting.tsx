@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import { asset } from "../asset";
+import Photo from "../components/Photo";
+import { media } from "../media";
 
 export default function Gifting() {
   return (
     <>
       <section className="page-hero gift-hero">
-        <span>Premium Gifting</span>
+        <span className="eyebrow marked">Premium Gifting</span>
         <h1>Nature, beautifully packed.</h1>
         <p>
           Curated honey boxes for festivals, weddings, teams, clients and
@@ -13,7 +14,7 @@ export default function Gifting() {
         </p>
       </section>
       <section className="section shell gifting-grid">
-        <img src={asset("assets/images/gifting.jpg")} alt="" />
+        <Photo media={media.giftTrio} alt="A three-jar Abhimanyu Organics gift box" sizes="(max-width: 980px) 92vw, 580px" />
         <div>
           <span className="eyebrow">Build a memorable box</span>
           <h2>Choose honey. Add a note. Make it yours.</h2>

@@ -1,10 +1,11 @@
-import { asset } from "../asset";
+import Photo from "../components/Photo";
+import { media } from "../media";
 
 export default function Account() {
   return (
     <section className="account-page">
       <div className="account-visual">
-        <img src={asset("assets/images/farm-reference.jpg")} alt="" />
+        <Photo media={media.jarBeri} alt="" sizes="(max-width: 980px) 100vw, 58vw" priority />
         <div>
           <span className="eyebrow light">Your honey shelf, remembered.</span>
           <h1>Welcome back to the farm.</h1>

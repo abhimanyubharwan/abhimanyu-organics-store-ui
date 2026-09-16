@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { asset } from "../asset";
+import Photo from "../components/Photo";
+import { media, type Media } from "../media";
 
 const TABS = ["All", "Farming", "Products", "Packaging", "Delivery"];
 
-const ITEMS: [string, string][] = [
-  ["Farming", "assets/images/farm-reference.jpg"],
-  ["Products", "assets/images/beri.jpg"],
-  ["Packaging", "assets/images/gifting.jpg"],
-  ["Products", "assets/images/mini-jars.jpg"],
-  ["Products", "assets/images/jamun.jpg"],
-  ["Farming", "assets/images/range-reference.jpg"],
-  ["Packaging", "assets/images/mini-collection.jpg"],
-  ["Delivery", "assets/images/gifting.jpg"],
+const ITEMS: [string, Media][] = [
+  ["Farming", media.jarInHand],
+  ["Products", media.jarBeri],
+  ["Packaging", media.giftBox],
+  ["Products", media.giftTrio],
+  ["Products", media.jarJamun],
+  ["Farming", media.jarsRosewood],
+  ["Packaging", media.miniFlight],
+  ["Delivery", media.jarDryFruit],
 ];
 
 export default function Gallery() {
@@ -20,7 +21,7 @@ export default function Gallery() {
   return (
     <>
       <section className="page-hero">
-        <span>Gallery</span>
+        <span className="eyebrow marked">Gallery</span>
         <h1>Inside Abhimanyu Organics.</h1>
         <p>
           Farms, apiaries, extraction, packaging, dispatch and product
@@ -45,7 +46,7 @@ export default function Gallery() {
               key={`${category}-${i}`}
               className={tab !== "All" && tab !== category ? "hide" : undefined}
             >
-              <img src={asset(image)} alt={category} />
+              <Photo media={image} alt={category} sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 25vw" />
               <figcaption>{category}</figcaption>
             </figure>
           ))}

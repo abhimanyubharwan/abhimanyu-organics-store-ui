@@ -8,7 +8,7 @@ export default function Wishlist() {
   return (
     <>
       <section className="page-hero">
-        <span>Wishlist</span>
+        <span className="eyebrow marked">Wishlist</span>
         <h1>Saved for later.</h1>
         <p>Your favourite jars and farm-direct products in one place.</p>
       </section>

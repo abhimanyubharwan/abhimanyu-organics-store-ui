@@ -1,5 +1,5 @@
-import { asset } from "../asset";
 import { useCatalog } from "../catalog";
+import ProductImage from "../components/ProductImage";
 
 export default function Cart() {
   const { cart } = useCatalog();
@@ -8,14 +8,14 @@ export default function Cart() {
   return (
     <>
       <section className="page-hero">
-        <span>Your Cart</span>
+        <span className="eyebrow marked">Your Cart</span>
         <h1>Good choices, ready to go.</h1>
       </section>
       <section className="section shell cart-grid">
         <div>
           {cart.map((p, i) => (
             <article key={`${p.id}-${i}`} className="cart-row">
-              <img src={asset(p.image)} alt={p.name} />
+              <ProductImage product={p} sizes="96px" />
               <div>
                 <h3>{p.name}</h3>
                 <small>{p.subtitle}</small>

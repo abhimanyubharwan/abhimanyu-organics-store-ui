@@ -8,7 +8,7 @@ export default function Seasonal() {
   return (
     <>
       <section className="page-hero seasonal-hero">
-        <span>Seasonal Goodness</span>
+        <span className="eyebrow marked">Seasonal Goodness</span>
         <h1>Fresh when nature says ready.</h1>
         <p>
           Ber and guava are offered in season, based on harvest and dispatch

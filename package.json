@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "vite",
     "start": "vite --open",
-    "build": "tsc -b && vite build",
-    "build:pages": "npm run build && cp dist/index.html dist/404.html && touch dist/.nojekyll",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "build:pages": "npm run build && touch dist/.nojekyll",
     "preview": "vite preview",
-    "typecheck": "tsc -b --noEmit"
+    "typecheck": "tsc -b --noEmit",
+    "images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -20,6 +21,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "sharp": "^0.34.5",
     "typescript": "~5.9.2",
     "vite": "^7.1.0"
   }
