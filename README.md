@@ -116,21 +116,23 @@ Customers check out as guests and pay online with **Stripe** or choose
    into it as `config.php`.
 3. Fill in `config.php`:
    - `site_url` — the site's address, e.g. `https://new.abhimanyuorganics.com`.
-   - `stripe_secret_key` — Stripe → Developers → API keys. Use the **test** key
-     (`sk_test_…`) first.
-   - `stripe_webhook_secret` — Stripe → Developers → Webhooks → *Add endpoint*
-     `https://<your-site>/api/stripe-webhook.php` with the events
+   - `stripe_secret_key` — Stripe → API keys → *Standard keys* → Secret key.
+     Use the **test** key (`sk_test_…`) first.
+   - `stripe_webhook_secret` — Stripe → Webhooks → *Create an event
+     destination* → *Your account*, with the events
      `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
-     `checkout.session.async_payment_failed` and `checkout.session.expired`;
-     then copy its signing secret (`whsec_…`).
+     `checkout.session.async_payment_failed` and `checkout.session.expired`,
+     destination type *Webhook endpoint*, URL
+     `https://<your-site>/api/stripe-webhook.php`; then reveal and copy its
+     signing secret (`whsec_…`).
    - Email: create a mailbox such as `orders@abhimanyuorganics.com` in
      hPanel → Emails and put its details under `smtp`.
    - `admin_password` — at least 12 characters.
 4. Open `https://<your-site>/api/admin.php`, sign in, and check that every line
    of *Setup check* says OK.
-5. Place a test order with Stripe's test card `4242 4242 4242 4242` (any
-   future date, any CVC), and one Cash on Delivery order. Both should appear in
-   admin and send two emails each.
+5. Place a test order with Stripe's Indian test card `4000 0035 6000 0008` (or
+   `4242 4242 4242 4242`; any future date, any CVC), and one Cash on Delivery
+   order. Both should appear in admin and send two emails each.
 6. To take real payments, repeat step 3 with the **live** secret key and a live
    webhook endpoint. Test and live mode have separate keys and webhook secrets.
 

@@ -145,11 +145,36 @@ function ao_private_dir(): string
     return dirname(__DIR__, 2) . '/private';
 }
 
+/**
+ * Why the private folder must not be used, or null if it is safe. It holds the
+ * order database, so it must never sit inside the folder the web server serves
+ * — as it would if this site lived in a sub-folder of another site's
+ * public_html, making "one level up" still public.
+ */
+function ao_private_dir_problem(): ?string
+{
+    $webRoot = realpath((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''));
+    $private = realpath(ao_private_dir());
+    if (!$webRoot || !$private) {
+        return null;
+    }
+    $normalise = fn (string $path) => rtrim(str_replace('\\', '/', $path), '/') . '/';
+    if (str_starts_with($normalise($private), $normalise($webRoot))) {
+        return 'The private folder is inside the public website folder, where its files could be downloaded. Move it next to public_html instead.';
+    }
+    return null;
+}
+
 function ao_config(): array
 {
     static $config = null;
     if ($config !== null) {
         return $config;
+    }
+    if (ao_private_dir_problem() !== null) {
+        // Deliberately not logged: the log would be written into that same
+        // publicly reachable folder.
+        ao_fail(503, 'setup', 'Online ordering is not open yet. Please call ' . AO_PHONE . ' to order.');
     }
     $file = ao_private_dir() . '/config.php';
     $loaded = is_file($file) ? require $file : null;
@@ -191,7 +216,7 @@ function ao_db(): PDO
         ao_fail(503, 'setup', 'Online ordering is temporarily unavailable. Please call ' . AO_PHONE . '.');
     }
     $dir = ao_private_dir();
-    if (!is_dir($dir) || !is_writable($dir)) {
+    if (!is_dir($dir) || !is_writable($dir) || ao_private_dir_problem() !== null) {
         ao_fail(503, 'setup', 'Online ordering is not open yet. Please call ' . AO_PHONE . ' to order.');
     }
     $db = new PDO('sqlite:' . $dir . '/store.sqlite', null, null, [

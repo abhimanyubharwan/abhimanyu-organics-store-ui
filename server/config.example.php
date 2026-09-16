@@ -10,22 +10,30 @@
 //
 // Never put this file inside public_html and never commit the real one to
 // git: it holds your Stripe secret key and your admin password.
+//
+// Only change the text between the quotes; keep the quotes and the comma at
+// the end of each line. Don't use ' or \ inside passwords — they end the text
+// early and the store will stop with an error in private/store.log.
 
 return [
     // The address customers use, with https:// and no slash at the end.
     'site_url' => 'https://new.abhimanyuorganics.com',
 
-    // Stripe dashboard → Developers → API keys → Secret key.
+    // Stripe dashboard → API keys (dashboard.stripe.com/test/apikeys while
+    // testing) → Standard keys → Secret key → reveal and copy.
     // Start with the TEST key (sk_test_…). Switch to the LIVE key (sk_live_…)
     // only when you are ready to take real payments.
     'stripe_secret_key' => 'sk_test_REPLACE_ME',
 
-    // Stripe dashboard → Developers → Webhooks → Add endpoint:
+    // Stripe dashboard → Webhooks (dashboard.stripe.com/test/webhooks while
+    // testing) → Create an event destination → Your account → tick the events
+    //   checkout.session.completed
+    //   checkout.session.async_payment_succeeded
+    //   checkout.session.async_payment_failed
+    //   checkout.session.expired
+    // → Continue → Webhook endpoint → Continue → Endpoint URL:
     //   https://new.abhimanyuorganics.com/api/stripe-webhook.php
-    // with the events checkout.session.completed,
-    // checkout.session.async_payment_succeeded,
-    // checkout.session.async_payment_failed and checkout.session.expired.
-    // Then copy that endpoint's "Signing secret" (whsec_…) here.
+    // Once it's created, reveal its Signing secret (whsec_…) and copy it here.
     // Test mode and live mode each have their own endpoint and secret.
     'stripe_webhook_secret' => 'whsec_REPLACE_ME',
 

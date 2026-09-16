@@ -51,6 +51,29 @@ function admin_time(string $iso): string
     return $iso === '' ? '' : date('d M Y, g:i a', strtotime($iso));
 }
 
+// Before the store is configured, say plainly what is missing and where the
+// file goes — the exact server path is the hard part to guess on Hostinger.
+// Shown only until config.php is in a safe place.
+$setupProblem = ao_private_dir_problem();
+if ($setupProblem !== null || !is_file(ao_private_dir() . '/config.php')) {
+    http_response_code(503);
+    header('Content-Type: text/html; charset=utf-8');
+    echo '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+        . '<meta name="robots" content="noindex"><title>Store setup · Abhimanyu Organics</title>'
+        . '<body style="margin:0;font:16px/1.6 system-ui,sans-serif;color:#2a1d10;background:#fffcf5">'
+        . '<main style="max-width:680px;margin:48px auto;padding:0 20px">'
+        . '<h1 style="font-family:Georgia,serif;font-weight:600">The store is not set up yet</h1>'
+        . ($setupProblem !== null
+            ? '<p style="padding:12px 16px;border-radius:10px;background:#f7e3de;color:#8a2d1c">' . h($setupProblem) . '</p>'
+            : '')
+        . '<p>Create a folder named <b>private</b> next to <b>public_html</b> (not inside it), and save '
+        . '<b>config.php</b> there, made from <code>server/config.example.php</code>. This server expects it at:</p>'
+        . '<p style="padding:12px 16px;border-radius:10px;background:#fdf7ea;box-shadow:inset 0 0 0 1px rgba(124,90,28,.2);word-break:break-all"><code>'
+        . h(ao_private_dir() . '/config.php') . '</code></p>'
+        . '<p>Then reload this page.</p></main></body>';
+    exit;
+}
+
 $config = ao_config();
 $https = ($_SERVER['HTTPS'] ?? '') !== '' && $_SERVER['HTTPS'] !== 'off';
 session_name('ao_admin');
@@ -265,6 +288,7 @@ $filter = ao_str($_GET, 'status', 20);
     $dir = ao_private_dir();
     $checks = [
         ['Private folder is writable', is_dir($dir) && is_writable($dir)],
+        ['Private folder is outside public_html', ao_private_dir_problem() === null],
         ['PHP ' . PHP_VERSION . ' (8.1 or newer)', version_compare(PHP_VERSION, '8.1.0', '>=')],
         ['pdo_sqlite extension', extension_loaded('pdo_sqlite')],
         ['curl extension', function_exists('curl_init')],
