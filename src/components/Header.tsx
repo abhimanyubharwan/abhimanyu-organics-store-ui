@@ -46,6 +46,7 @@ export default function Header() {
         <div className="shell topbar-inner">
           <span>Free delivery on orders of ₹999+</span>
           <span className="topbar-mid">100% Natural · Lab Tested · Pan India Delivery</span>
+          <Link to="/support">Help &amp; support</Link>
           <a href="tel:+919050262600">+91 90502 62600</a>
         </div>
       </div>
@@ -71,6 +72,11 @@ export default function Header() {
               {label}
             </NavLink>
           ))}
+          {/* The top bar carries this link on wide screens; phones hide the top
+              bar's links, so the menu gets it instead. */}
+          <NavLink to="/support" className={({ isActive }) => (isActive ? "active menu-only" : "menu-only")}>
+            Help &amp; support
+          </NavLink>
         </nav>
 
         <div className="nav-actions">

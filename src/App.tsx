@@ -27,6 +27,7 @@ const pages = {
   OrderStatus: () => import("./pages/OrderStatus"),
   Account: () => import("./pages/Account"),
   Policy: () => import("./pages/Policy"),
+  Support: () => import("./pages/Support"),
 };
 
 const Shop = lazy(pages.Shop);
@@ -44,6 +45,7 @@ const Checkout = lazy(pages.Checkout);
 const OrderStatus = lazy(pages.OrderStatus);
 const Account = lazy(pages.Account);
 const Policy = lazy(pages.Policy);
+const Support = lazy(pages.Support);
 
 function useWarmRoutes() {
   useEffect(() => {
@@ -90,6 +92,9 @@ export default function App() {
             <Route path="/refund-policy" element={<Policy slug="refund-policy" />} />
             <Route path="/privacy-policy" element={<Policy slug="privacy-policy" />} />
             <Route path="/terms-and-conditions" element={<Policy slug="terms-and-conditions" />} />
+            <Route path="/support" element={<Support />} />
+            {/* The contact page's address on the old Website Builder site. */}
+            <Route path="/contact-us" element={<Navigate to="/support" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

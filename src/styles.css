@@ -3779,6 +3779,367 @@ footer::before {
   text-decoration: underline;
 }
 
+/* --- support ------------------------------------------------------------- */
+
+/* The top bar carries the Help link on wide screens; the menu, on narrow ones. */
+nav a.menu-only {
+  display: none;
+}
+
+.support-jump {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.support-jump a {
+  padding: 11px 20px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  background: rgba(255, 252, 245, 0.72);
+  box-shadow: inset 0 0 0 1px var(--gold-line);
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.support-jump a:hover {
+  color: var(--ink);
+  background: var(--honey-50);
+}
+
+.section.support-channels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding-bottom: 0;
+}
+
+.support-channel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 6px;
+  padding: 30px 28px 32px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, var(--card), var(--ivory-2));
+  box-shadow: 0 0 0 1px var(--gold-hair);
+  transition: opacity 0.75s var(--ease), transform 0.5s var(--ease);
+}
+
+/* The hover lift fades in on its own layer, so only opacity and transform animate. */
+.support-channel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 0 0 1px var(--gold-line), var(--lift-sm);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.support-channel:hover {
+  transform: translateY(-3px);
+}
+
+.support-channel:hover::after {
+  opacity: 1;
+}
+
+.support-icon {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  color: var(--honey-800);
+  background: radial-gradient(circle at 32% 28%, #fff8e6, var(--honey-200));
+  box-shadow: inset 0 0 0 1px rgba(140, 90, 15, 0.22);
+}
+
+.support-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.support-channel b {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.support-detail {
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--gold-deep);
+  overflow-wrap: anywhere;
+}
+
+.support-channel small {
+  margin-top: 4px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.support-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+
+.support-split,
+.support-faq {
+  scroll-margin-top: calc(var(--head-h) - 48px);
+}
+
+.support-copy h2 {
+  margin: 16px 0 18px;
+  font-size: clamp(38px, 4.2vw, 56px);
+  text-wrap: balance;
+}
+
+.support-copy p {
+  margin: 0 0 16px;
+  max-width: 48ch;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+.support-copy .support-note {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.support-form {
+  display: grid;
+  gap: 18px;
+}
+
+.support-form .btn {
+  justify-self: start;
+}
+
+.support-sent h3 {
+  margin-bottom: 12px;
+  font-size: 30px;
+}
+
+.support-sent p {
+  margin: 0 0 18px;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+.support-sent p a {
+  color: var(--gold-deep);
+}
+
+/* A full-width parchment band behind the questions, without a wrapper element. */
+.support-faq {
+  background: var(--ivory-2);
+  box-shadow: 0 0 0 100vmax var(--ivory-2);
+  clip-path: inset(0 -100vmax);
+}
+
+.faq-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 44px 56px;
+  align-items: start;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.faq-group h3 {
+  margin-bottom: 6px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.faq-group details {
+  border-bottom: 1px solid var(--line-2);
+}
+
+.faq-group summary {
+  position: relative;
+  padding: 18px 50px 18px 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.faq-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-group summary::after {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  margin-top: -16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--gold-deep);
+  box-shadow: inset 0 0 0 1px var(--gold-line);
+  transition: transform 0.35s var(--ease);
+}
+
+.faq-group details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faq-group details p {
+  margin: -4px 0 0;
+  padding: 0 50px 22px 0;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+.faq-group details a,
+.support-facts a {
+  color: var(--gold-deep);
+  text-decoration: underline;
+}
+
+.support-facts {
+  display: grid;
+  gap: 14px;
+  margin: 30px 0 0;
+  padding: 24px 26px;
+  border-radius: var(--radius);
+  background: var(--ivory-2);
+  box-shadow: inset 0 0 0 1px var(--gold-hair);
+}
+
+.support-facts div {
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.support-facts dt {
+  padding-top: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.support-facts dd {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+@media (max-width: 1140px) {
+  nav a.menu-only {
+    display: block;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 980px) {
+  .support-split,
+  .faq-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .faq-groups {
+    gap: 36px;
+  }
+}
+
+@media (max-width: 760px) {
+  .section.support-channels {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 620px) {
+  .support-jump {
+    gap: 8px;
+    margin-top: 22px;
+  }
+
+  .support-jump a {
+    padding: 10px 14px;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+  }
+
+  .support-channel {
+    grid-template-columns: 48px minmax(0, 1fr);
+    column-gap: 16px;
+    row-gap: 2px;
+    padding: 22px 20px;
+  }
+
+  .support-icon {
+    grid-row: 1 / span 3;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0;
+  }
+
+  .support-channel b {
+    font-size: 24px;
+  }
+
+  .faq-group summary {
+    padding-right: 44px;
+    font-size: 20px;
+  }
+
+  .faq-group details p {
+    padding-right: 0;
+  }
+
+  .support-facts {
+    padding: 20px;
+  }
+
+  .support-facts div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .support-form .btn {
+    justify-self: stretch;
+  }
+}
+
 @media (max-width: 980px) {
   .checkout-grid,
   .order-grid {

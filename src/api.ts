@@ -14,6 +14,12 @@ export interface ApiError {
 /** sessionStorage key: the order placed in this tab, so only it clears the cart. */
 export const PENDING_ORDER_KEY = "ao.pending-order";
 
+/** A mobile number as the API stores it: 10 digits, without +91 or a leading 0. */
+export function normalisePhone(raw: string) {
+  const digits = raw.replace(/\D/g, "");
+  return digits.length > 10 ? digits.replace(/^(91|0)/, "") : digits;
+}
+
 const UNAVAILABLE: ApiError = {
   ok: false,
   error: "unavailable",

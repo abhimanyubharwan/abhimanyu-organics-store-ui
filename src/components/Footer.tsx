@@ -39,6 +39,8 @@ export default function Footer() {
         </div>
         <div>
           <h4>Help</h4>
+          <Link to="/support">Help &amp; support</Link>
+          <Link to="/support#track">Track your order</Link>
           <Link to="/refund-policy">Refund policy</Link>
           <Link to="/privacy-policy">Privacy policy</Link>
           <Link to="/terms-and-conditions">Terms &amp; conditions</Link>

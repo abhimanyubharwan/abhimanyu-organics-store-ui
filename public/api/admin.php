@@ -51,6 +51,23 @@ function admin_time(string $iso): string
     return $iso === '' ? '' : date('d M Y, g:i a', strtotime($iso));
 }
 
+/** One message from the Support page, for the Support tab and under its order. */
+function admin_support_card(array $r, bool $linkOrder): string
+{
+    $mobile = ao_indian_mobile($r['phone']);
+    $html = '<div class="card"><div class="row" style="justify-content:space-between">'
+        . '<b>' . h($r['topic']) . ' · ' . h($r['name']) . '</b><small>' . h(admin_time($r['created_at'])) . '</small></div>'
+        . '<p><a href="mailto:' . h($r['email']) . '">' . h($r['email']) . '</a>'
+        . ' · <a href="tel:' . h(preg_replace('/[^\d+]/', '', $r['phone'])) . '">' . h($r['phone']) . '</a>'
+        . (preg_match('/^[6-9]\d{9}$/', $mobile) ? ' · <a href="https://wa.me/91' . h($mobile) . '">WhatsApp</a>' : '');
+    if ($linkOrder && $r['order_id'] !== '') {
+        $html .= ' · Order ' . (ao_find_order($r['order_id'])
+            ? '<a href="admin.php?order=' . h(rawurlencode($r['order_id'])) . '">' . h($r['order_id']) . '</a>'
+            : h($r['order_id']) . ' (no such order)');
+    }
+    return $html . '</p><pre>' . h($r['message']) . '</pre></div>';
+}
+
 // Before the store is configured, say plainly what is missing and where the
 // file goes — the exact server path is the hard part to guess on Hostinger.
 // Shown only until config.php is in a safe place.
@@ -184,6 +201,7 @@ $filter = ao_str($_GET, 'status', 20);
   <?php if ($signedIn): ?>
   <nav>
     <a href="admin.php" class="<?= $view === 'orders' ? 'on' : '' ?>">Orders</a>
+    <a href="admin.php?view=support" class="<?= $view === 'support' ? 'on' : '' ?>">Support</a>
     <a href="admin.php?view=enquiries" class="<?= $view === 'enquiries' ? 'on' : '' ?>">Enquiries</a>
     <a href="admin.php?view=setup" class="<?= $view === 'setup' ? 'on' : '' ?>">Setup check</a>
     <form method="post" style="display:inline">
@@ -270,7 +288,21 @@ $filter = ao_str($_GET, 'status', 20);
       <?php endif; endif; ?>
     </div>
   </div>
+  <?php
+    $messages = ao_db()->prepare('SELECT * FROM support_requests WHERE order_id = ? ORDER BY id DESC');
+    $messages->execute([$o['id']]);
+    $messages = $messages->fetchAll();
+    if ($messages): ?>
+  <h2>Support messages</h2>
+  <?php foreach ($messages as $r): ?><?= admin_support_card($r, false) ?><?php endforeach; ?>
+  <?php endif; ?>
     <?php endif; ?>
+
+<?php elseif ($view === 'support'):
+    $rows = ao_db()->query('SELECT * FROM support_requests ORDER BY id DESC LIMIT 200')->fetchAll(); ?>
+  <h1>Support messages</h1>
+  <?php if (!$rows): ?><div class="card">No support messages yet.</div><?php endif; ?>
+  <?php foreach ($rows as $r): ?><?= admin_support_card($r, true) ?><?php endforeach; ?>
 
 <?php elseif ($view === 'enquiries'):
     $rows = ao_db()->query('SELECT * FROM enquiries ORDER BY id DESC LIMIT 200')->fetchAll(); ?>

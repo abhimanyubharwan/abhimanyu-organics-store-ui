@@ -106,6 +106,11 @@ export default function OrderStatus() {
         <span className="eyebrow marked">Your order</span>
         <h1>We couldn't open this order.</h1>
         <p>{view.message}</p>
+        <p>
+          <Link className="btn gold" to="/support#track">
+            Find your order
+          </Link>
+        </p>
       </section>
     );
   }
@@ -185,7 +190,8 @@ export default function OrderStatus() {
           </address>
           <p className="order-help">
             A confirmation is on its way to <b>{order.customer.email}</b>. Questions about your order? Call or WhatsApp{" "}
-            <a href="tel:+919050262600">+91 90502 62600</a> with your order number.
+            <a href="tel:+919050262600">+91 90502 62600</a> with your order number, or{" "}
+            <Link to={`/support?order=${encodeURIComponent(order.id)}#contact`}>send us a message</Link>.
           </p>
           <Link className="link-more" to="/shop">
             Continue shopping <span>→</span>

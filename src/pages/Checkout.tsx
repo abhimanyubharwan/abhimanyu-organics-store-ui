@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { PENDING_ORDER_KEY, postJson } from "../api";
+import { PENDING_ORDER_KEY, normalisePhone, postJson } from "../api";
 import { rupees, settings, useCatalog } from "../catalog";
 import ProductImage from "../components/ProductImage";
 
@@ -42,11 +42,6 @@ function loadDetails(): Details {
 }
 
 /** Mirrors the server's rules in public/api/_lib.php, which have the final say. */
-export function normalisePhone(raw: string) {
-  const digits = raw.replace(/\D/g, "");
-  return digits.length > 10 ? digits.replace(/^(91|0)/, "") : digits;
-}
-
 function validate(d: Details): Record<string, string> {
   const errors: Record<string, string> = {};
   if (d.name.trim().length < 2) errors.name = "Enter your full name.";

@@ -84,6 +84,10 @@ For a clip of a different length, change `trim=0:7.0`, `trim=0.5:7.0` and
 - `/checkout` (accepts `?cancelled=1` after an abandoned Stripe payment)
 - `/order/:id?t=<token>` — an order's confirmation and status page
 - `/account` — explains guest checkout; there are no customer accounts
+- `/support` — help and contact: WhatsApp / call / email, *Track an order*,
+  common questions and a message form. Accepts `?order=<id>` to pre-fill the
+  form (order pages link here that way); `#track`, `#faq` and `#contact` jump
+  to a section. `/contact-us`, the old Website Builder address, redirects here.
 - `/refund-policy`, `/privacy-policy`, `/terms-and-conditions`
 
 ## Checkout and orders
@@ -104,9 +108,15 @@ Customers check out as guests and pay online with **Stripe** or choose
 - **Orders are kept on the server** in `private/store.sqlite` (SQLite, created
   automatically), beside `public_html` where nobody can download it. Include
   that folder in backups.
-- **Back office:** `/api/admin.php` lists orders and enquiries, marks orders
-  shipped / delivered / cancelled, and has a *Setup check* page. Refunds for
-  online payments are issued in the Stripe dashboard.
+- **Back office:** `/api/admin.php` lists orders, support messages and
+  enquiries, marks orders shipped / delivered / cancelled, and has a *Setup
+  check* page. Refunds for online payments are issued in the Stripe dashboard.
+- **Support:** *Track an order* on `/support` opens an order's page when its
+  order number and the email or mobile number it was placed with both match
+  (10 tries per visitor per 15 minutes), so a lost confirmation email isn't a
+  dead end. Messages from the form are saved, emailed to `owner_email` with
+  Reply-To set to the customer, and shown on admin's *Support* tab and under
+  the order they mention.
 
 ### Setting up checkout on Hostinger
 
@@ -167,7 +177,7 @@ The Vite dev server (`npm start`) has no PHP, so there checkout shows
 | `src/catalog.tsx` | Catalogue helpers plus the cart and wishlist (saved in the browser) |
 | `src/api.ts` | Calls to the PHP order API |
 | `src/policies.ts` | Refund, privacy and terms wording |
-| `public/api/` | PHP order API: orders, order status, Stripe webhook, enquiries, admin |
+| `public/api/` | PHP order API: orders, order status and lookup, Stripe webhook, support messages, enquiries, admin |
 | `server/config.example.php` | Template for the private `config.php` on the server |
 | `src/media.ts` | Every real photograph: file name, pixel size, generated widths |
 | `src/components/Photo.tsx` | Responsive AVIF/WebP/JPEG `<picture>` for a media entry |
@@ -263,6 +273,9 @@ the leading and trailing slashes. Nothing else hardcodes the path.
   so they survive reloads on that device but are not shared across devices.
 - The Bulk Orders form saves each enquiry on the server and emails it to
   `owner_email`. There are no customer logins; `/account` explains guest checkout.
+- The answers on `/support` are written from what the site already states
+  (delivery charges come from `src/catalog.json`). Its topic list is repeated
+  in `public/api/support.php`; change both together.
 - The policy pages repeat, word for word, what the Website Builder store
   published. Their wording has not been reviewed against this store's actual
   terms (for example, returns within 5 vs 15 days; "Private Limited").

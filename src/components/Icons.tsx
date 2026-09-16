@@ -161,6 +161,33 @@ export function Gift({ className }: P) {
   );
 }
 
+export function Chat({ className }: P) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 5C9.6 5 4.5 9.3 4.5 14.8c0 2.9 1.4 5.5 3.7 7.3L7.2 27l5.2-2.5c1.1.3 2.3.4 3.6.4 6.4 0 11.5-4.4 11.5-10.1S22.4 5 16 5z" {...stroke} />
+      <path d="M11 15h.01M16 15h.01M21 15h.01" {...stroke} strokeWidth="2.6" />
+    </svg>
+  );
+}
+
+export function Phone({ className }: P) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <rect x="9" y="3.5" width="14" height="25" rx="3" {...stroke} />
+      <path d="M14 7.5h4M15 24.5h2" {...stroke} />
+    </svg>
+  );
+}
+
+export function Mail({ className }: P) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <rect x="4" y="7.5" width="24" height="17" rx="2.5" {...stroke} />
+      <path d="m5.5 9.5 10.5 8 10.5-8" {...stroke} />
+    </svg>
+  );
+}
+
 export function Arrow({ className }: P) {
   return (
     <svg className={className} viewBox="0 0 20 20" width="15" height="15" aria-hidden="true">

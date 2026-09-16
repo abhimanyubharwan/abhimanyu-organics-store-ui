@@ -25,8 +25,10 @@ export default function Account() {
           Shop honey
         </Link>
         <p className="account-copy">
-          Questions about an order? Call or WhatsApp <a href="tel:+919050262600">+91 90502 62600</a>
-          {" "}or email <a href="mailto:organicsabhimanyu@gmail.com">organicsabhimanyu@gmail.com</a>.
+          Lost your confirmation email? <Link to="/support#track">Track an order</Link> with its order number.
+          Questions? Visit <Link to="/support">Help &amp; support</Link>, call or WhatsApp{" "}
+          <a href="tel:+919050262600">+91 90502 62600</a>, or email{" "}
+          <a href="mailto:organicsabhimanyu@gmail.com">organicsabhimanyu@gmail.com</a>.
         </p>
       </div>
     </section>

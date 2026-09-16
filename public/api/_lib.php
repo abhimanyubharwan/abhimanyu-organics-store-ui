@@ -262,6 +262,17 @@ function ao_db(): PDO
             type TEXT NOT NULL,
             message TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS support_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            order_id TEXT NOT NULL DEFAULT '',
+            topic TEXT NOT NULL,
+            message TEXT NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS support_by_order ON support_requests (order_id);
         CREATE TABLE IF NOT EXISTS stripe_events (
             id TEXT PRIMARY KEY,
             type TEXT NOT NULL,
@@ -459,6 +470,16 @@ function ao_create_order(array $details, array $priced, string $payment): array
     $db->prepare('INSERT INTO orders (' . implode(', ', $columns) . ') VALUES (' . implode(', ', array_fill(0, count($columns), '?')) . ')')
         ->execute(array_values($order));
     return ao_find_order($order['id']);
+}
+
+/**
+ * An order number the way people type it back — any case, with spaces, a "#"
+ * or no hyphen — in its stored form, or '' if it can't be one.
+ */
+function ao_normalise_order_id(string $raw): string
+{
+    $compact = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $raw) ?? '');
+    return preg_match('/^(AO\d{6})([A-Z0-9]{5})$/', $compact, $m) ? "{$m[1]}-{$m[2]}" : '';
 }
 
 function ao_find_order(string $id): ?array
@@ -870,7 +891,8 @@ function ao_notify_order(array $order): void
             . ($cod ? "You'll pay $total in cash when it arrives." : "We've received your payment of $total.")
             . "\n\nOrder {$order['id']}\n\n$summary\n\n"
             . "Follow your order: " . ao_order_link($order) . "\n\n"
-            . "Questions? Call or WhatsApp " . AO_PHONE . ", or reply to this email.\n\n"
+            . "Questions? Call or WhatsApp " . AO_PHONE . ", reply to this email, or visit "
+            . $config['site_url'] . "/support\n\n"
             . "Abhimanyu Organics\n457, Panihar Chak, Hisar, Haryana 125001\n",
         (string) $config['owner_email'],
     );
