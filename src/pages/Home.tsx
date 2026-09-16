@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { media } from "../media";
+import type { Post } from "../journal";
 import Photo from "../components/Photo";
+import JournalCover from "../components/JournalCover";
 import ProductCard from "../components/ProductCard";
 import { StoryFilmDialog } from "../components/StoryFilm";
 import ProductImage from "../components/ProductImage";
@@ -63,12 +65,13 @@ const QUOTES: [string, string, string][] = [
   ],
 ];
 
-const JOURNAL = [
+// Newest first; four fit the row.
+const JOURNAL: [string, Post["cover"], string, string][] = [
+  ["gulkand-honey", "rose-honey", "Gulkand honey, explained", "Rose petals, honey and a summer ritual."],
   ["raw-honey", media.jarBeri, "Why raw honey crystallizes", "A natural sign, not a defect."],
   ["bee-pollen", media.jarDryFruit, "Bee pollen, from hive to table", "What it is and how people use it."],
   ["beekeeping", media.jarInHand, "Inside responsible beekeeping", "Small bees, big changes."],
-  ["honey-health", media.miniFlight, "Everyday ways to use honey", "Food, drinks and simple routines."],
-] as const;
+];
 
 /* ------------------------------------------------------------ honey drip --- */
 
@@ -530,12 +533,11 @@ export default function Home() {
           </Link>
         </div>
         <div className="journal-grid">
-          {JOURNAL.map(([slug, image, title, excerpt]) => (
+          {JOURNAL.map(([slug, cover, title, excerpt]) => (
             <Link key={slug} to={`/blog/${slug}`} className="journal-card reveal">
               <div className="journal-media">
-                <Photo
-                  media={image}
-                  alt=""
+                <JournalCover
+                  cover={cover}
                   sizes="(max-width: 620px) 100vw, (max-width: 1080px) 50vw, 300px"
                 />
               </div>

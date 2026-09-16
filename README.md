@@ -68,6 +68,27 @@ For a clip of a different length, change `trim=0:7.0`, `trim=0.5:7.0` and
 `offset=6.0` (clip length minus one second), and the duration mentioned in
 `StoryFilm.tsx`.
 
+## Writing a Journal article
+
+The Journal's posts are listed in [`src/journal.ts`](src/journal.ts), newest
+first. Posts with a written article (so far, *Gulkand honey*) show their own
+text; the rest show a shared introduction until theirs is written.
+
+1. Write the article in `src/articles/<slug>.tsx`, like
+   [`gulkand-honey.tsx`](src/articles/gulkand-honey.tsx): export `lead` (the
+   opening line, also used as the page's search description) and the body as
+   the default export — `h2` sections, lists, and optionally a `.recipe` box and
+   an `.article-cta` panel.
+2. Add or update its entry in `src/journal.ts` with `date` and `readMinutes`
+   (words ÷ 200, rounded up), and register it in `ARTICLES` in
+   [`src/pages/BlogDetail.tsx`](src/pages/BlogDetail.tsx).
+3. To feature it on the home page, put it first in `JOURNAL` in
+   `src/pages/Home.tsx`; the row holds four.
+
+A cover is a photograph from `src/media.ts`. When there is no photograph of the
+subject, draw one instead (see `src/components/RoseHoneyArt.tsx`) rather than
+using a photo of a different jar, whose label readers would take at its word.
+
 ## Main routes
 - `/` immersive homepage
 - `/shop` (accepts `?cat=Honey` to preselect a category)
@@ -76,7 +97,7 @@ For a clip of a different length, change `trim=0:7.0`, `trim=0.5:7.0` and
 - `/gifting`
 - `/seasonal`
 - `/blog`
-- `/blog/:slug`
+- `/blog/:slug` — e.g. `/blog/gulkand-honey`
 - `/gallery`
 - `/bulk`
 - `/wishlist`
@@ -177,6 +198,7 @@ The Vite dev server (`npm start`) has no PHP, so there checkout shows
 | `src/catalog.tsx` | Catalogue helpers plus the cart and wishlist (saved in the browser) |
 | `src/api.ts` | Calls to the PHP order API |
 | `src/policies.ts` | Refund, privacy and terms wording |
+| `src/journal.ts`, `src/articles/` | Journal posts and the written articles (see *Writing a Journal article*) |
 | `public/api/` | PHP order API: orders, order status and lookup, Stripe webhook, support messages, enquiries, admin |
 | `server/config.example.php` | Template for the private `config.php` on the server |
 | `src/media.ts` | Every real photograph: file name, pixel size, generated widths |
