@@ -1,0 +1,13 @@
+# Order API. Only the endpoint scripts are meant to be requested.
+Options -Indexes
+
+# _lib.php and other underscore files are included by the endpoints, never
+# fetched directly.
+<FilesMatch "^_">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-store"
+  Header set X-Robots-Tag "noindex"
+</IfModule>

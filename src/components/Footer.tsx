@@ -38,6 +38,13 @@ export default function Footer() {
           <Link to="/our-story">Our Story</Link>
         </div>
         <div>
+          <h4>Help</h4>
+          <Link to="/refund-policy">Refund policy</Link>
+          <Link to="/privacy-policy">Privacy policy</Link>
+          <Link to="/terms-and-conditions">Terms &amp; conditions</Link>
+          <a href="mailto:organicsabhimanyu@gmail.com">organicsabhimanyu@gmail.com</a>
+        </div>
+        <div>
           <h4>Business</h4>
           <Link to="/bulk">Bulk Orders</Link>
           <Link to="/bulk">Supplier Enquiry</Link>

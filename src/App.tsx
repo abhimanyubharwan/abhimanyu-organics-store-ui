@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import AddedToast from "./components/AddedToast";
 import ScrollToTop from "./ScrollToTop";
 import { useReveal } from "./useReveal";
 import Home from "./pages/Home";
@@ -22,7 +23,10 @@ const pages = {
   Bulk: () => import("./pages/Bulk"),
   Wishlist: () => import("./pages/Wishlist"),
   Cart: () => import("./pages/Cart"),
+  Checkout: () => import("./pages/Checkout"),
+  OrderStatus: () => import("./pages/OrderStatus"),
   Account: () => import("./pages/Account"),
+  Policy: () => import("./pages/Policy"),
 };
 
 const Shop = lazy(pages.Shop);
@@ -36,7 +40,10 @@ const Gallery = lazy(pages.Gallery);
 const Bulk = lazy(pages.Bulk);
 const Wishlist = lazy(pages.Wishlist);
 const Cart = lazy(pages.Cart);
+const Checkout = lazy(pages.Checkout);
+const OrderStatus = lazy(pages.OrderStatus);
 const Account = lazy(pages.Account);
+const Policy = lazy(pages.Policy);
 
 function useWarmRoutes() {
   useEffect(() => {
@@ -77,12 +84,18 @@ export default function App() {
             <Route path="/bulk" element={<Bulk />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order/:id" element={<OrderStatus />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/refund-policy" element={<Policy slug="refund-policy" />} />
+            <Route path="/privacy-policy" element={<Policy slug="privacy-policy" />} />
+            <Route path="/terms-and-conditions" element={<Policy slug="terms-and-conditions" />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </main>
       <Footer />
+      <AddedToast />
     </>
   );
 }

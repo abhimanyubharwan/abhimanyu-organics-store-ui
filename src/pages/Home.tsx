@@ -5,7 +5,7 @@ import Photo from "../components/Photo";
 import ProductCard from "../components/ProductCard";
 import { StoryFilmDialog } from "../components/StoryFilm";
 import ProductImage from "../components/ProductImage";
-import { useCatalog } from "../catalog";
+import { isOnSale, lowestPrice, rupees, useCatalog } from "../catalog";
 import {
   Arrow,
   Bee,
@@ -395,7 +395,7 @@ export default function Home() {
                   <ProductImage product={p} sizes="190px" />
                 </span>
                 <b>{p.name}</b>
-                <small>₹{p.price}</small>
+                <small>{isOnSale(p) ? `From ${rupees(lowestPrice(p))}` : "Coming soon"}</small>
               </Link>
             ))}
           </div>

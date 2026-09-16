@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useCatalog, type Product } from "../catalog";
+import { defaultPack, isOnSale, rupees, useCatalog, type Product } from "../catalog";
 import { Heart } from "./Icons";
 import ProductImage from "./ProductImage";
 
@@ -13,12 +14,18 @@ export default function ProductCard({
 }) {
   const { add, toggleWish, wishlist } = useCatalog();
   const wished = wishlist.includes(product.id);
+  const onSale = isOnSale(product);
+  const [packId, setPackId] = useState(defaultPack(product)?.id ?? "");
+  const pack = product.packs.find((k) => k.id === packId);
+  const badge = onSale ? product.badge : "Coming soon";
 
   return (
-    <article className="product-card reveal">
+    <article className={onSale ? "product-card reveal" : "product-card reveal is-soon"}>
       <div className="product-media">
-        {product.badge && (
-          <span className={product.badge === "Premium" ? "badge foil" : "badge"}>{product.badge}</span>
+        {badge && (
+          <span className={badge === "Premium" ? "badge foil" : badge === "Coming soon" ? "badge soft" : "badge"}>
+            {badge}
+          </span>
         )}
         <button
           className={wished ? "wish on" : "wish"}
@@ -37,15 +44,33 @@ export default function ProductCard({
         <h3>
           <Link to={`/product/${product.id}`}>{product.name}</Link>
         </h3>
-        <div className="rating" aria-label="Rated 4.8 out of 5 from 96 reviews">
-          ★ 4.8 <span>(96)</span>
-        </div>
-        <div className="price">
-          ₹{product.price} {product.mrp && <del>₹{product.mrp}</del>}
-        </div>
-        <button className="btn small" onClick={() => add(product)}>
-          Add to cart
-        </button>
+
+        {onSale && pack ? (
+          <>
+            <div className="card-buy">
+              {product.packs.length > 1 ? (
+                <label className="pack-select">
+                  <span className="visually-hidden">Pack size for {product.name}</span>
+                  <select value={packId} onChange={(event) => setPackId(event.target.value)}>
+                    {product.packs.map((k) => (
+                      <option key={k.id} value={k.id}>
+                        {k.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : (
+                <span className="pack-single">{pack.label}</span>
+              )}
+              <span className="price">{rupees(pack.price)}</span>
+            </div>
+            <button className="btn small" onClick={() => add(product, pack.id)}>
+              Add to cart
+            </button>
+          </>
+        ) : (
+          <p className="soon-note">Not available to order yet</p>
+        )}
       </div>
     </article>
   );

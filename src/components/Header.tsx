@@ -16,7 +16,7 @@ const LINKS: [string, string][] = [
 ];
 
 export default function Header() {
-  const { cart, wishlist } = useCatalog();
+  const { count, wishlist } = useCatalog();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
@@ -44,7 +44,7 @@ export default function Header() {
     <div className={scrolled ? "site-head solid" : "site-head"}>
       <div className="topbar">
         <div className="shell topbar-inner">
-          <span>Free shipping on orders above ₹999</span>
+          <span>Free delivery on orders of ₹999+</span>
           <span className="topbar-mid">100% Natural · Lab Tested · Pan India Delivery</span>
           <a href="tel:+919050262600">+91 90502 62600</a>
         </div>
@@ -81,9 +81,9 @@ export default function Header() {
           <Link className="icon-btn" to="/account" aria-label="Account">
             <User />
           </Link>
-          <Link className="icon-btn" to="/cart" aria-label={`Cart, ${cart.length} items`}>
+          <Link className="icon-btn" to="/cart" aria-label={`Cart, ${count} items`}>
             <Cart />
-            {cart.length > 0 && <i>{cart.length}</i>}
+            {count > 0 && <i>{count}</i>}
           </Link>
           <button
             className="icon-btn hamb"

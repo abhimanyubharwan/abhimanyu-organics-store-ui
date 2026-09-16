@@ -1,0 +1,185 @@
+{
+  "shipping": { "freeFrom": 999, "fee": 99 },
+  "cod": { "enabled": true },
+  "products": [
+    {
+      "id": "multiflora",
+      "name": "Multiflora Honey",
+      "category": "Honey",
+      "collection": "Signature Harvests",
+      "subtitle": "Everyday floral blend",
+      "photo": "miniFlight",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 949, "popular": true },
+        { "id": "400g", "label": "400 g", "price": 475, "popular": true },
+        { "id": "350g", "label": "350 g", "price": 429, "popular": true },
+        { "id": "100g", "label": "100 g", "price": 125 }
+      ]
+    },
+    {
+      "id": "rosewood",
+      "name": "Rosewood Honey",
+      "category": "Honey",
+      "collection": "Signature Harvests",
+      "subtitle": "Signature harvest",
+      "photo": "jarInHand",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 999, "popular": true },
+        { "id": "500g", "label": "500 g", "price": 599, "popular": true },
+        { "id": "400g", "label": "400 g", "price": 485 },
+        { "id": "350g", "label": "350 g", "price": 439 },
+        { "id": "100g", "label": "100 g", "price": 130 }
+      ]
+    },
+    {
+      "id": "beri",
+      "name": "Beri Honey",
+      "category": "Honey",
+      "collection": "Signature Harvests",
+      "subtitle": "Signature harvest",
+      "photo": "jarBeri",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1099, "popular": true },
+        { "id": "400g", "label": "400 g", "price": 525, "popular": true },
+        { "id": "350g", "label": "350 g", "price": 475, "popular": true },
+        { "id": "100g", "label": "100 g", "price": 140 }
+      ]
+    },
+    {
+      "id": "kashmiri-acacia",
+      "name": "Kashmiri Acacia Honey",
+      "category": "Honey",
+      "collection": "Premium Reserve Collection",
+      "subtitle": "Light & delicate",
+      "badge": "Premium",
+      "photo": "acaciaBox",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1299 },
+        { "id": "400g", "label": "400 g", "price": 659, "popular": true },
+        { "id": "350g", "label": "350 g", "price": 595 },
+        { "id": "100g", "label": "100 g", "price": 199 }
+      ]
+    },
+    {
+      "id": "kashmiri-acacia-usa",
+      "name": "Kashmiri Acacia Honey (USA)",
+      "category": "Honey",
+      "collection": "Premium Reserve Collection",
+      "subtitle": "Premium reserve",
+      "badge": "Premium",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1699 },
+        { "id": "400g", "label": "400 g", "price": 899, "popular": true },
+        { "id": "350g", "label": "350 g", "price": 799 },
+        { "id": "100g", "label": "100 g", "price": 249 }
+      ]
+    },
+    {
+      "id": "tulsi",
+      "name": "Tulsi Honey",
+      "category": "Honey",
+      "collection": "Seasonal & Limited Harvests",
+      "subtitle": "Herbal floral notes",
+      "badge": "Limited stock",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1099 },
+        { "id": "400g", "label": "400 g", "price": 549 },
+        { "id": "350g", "label": "350 g", "price": 495 },
+        { "id": "100g", "label": "100 g", "price": 149 }
+      ]
+    },
+    {
+      "id": "jamun",
+      "name": "Jamun Honey",
+      "category": "Honey",
+      "collection": "Seasonal & Limited Harvests",
+      "subtitle": "Bold floral character",
+      "badge": "Limited stock",
+      "photo": "jarJamun",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1099 },
+        { "id": "400g", "label": "400 g", "price": 525 },
+        { "id": "350g", "label": "350 g", "price": 475, "popular": true },
+        { "id": "100g", "label": "100 g", "price": 140 }
+      ]
+    },
+    {
+      "id": "neem",
+      "name": "Neem Honey",
+      "category": "Honey",
+      "collection": "Seasonal & Limited Harvests",
+      "subtitle": "Distinctive & bold",
+      "badge": "Limited stock",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1099, "popular": true },
+        { "id": "400g", "label": "400 g", "price": 525 },
+        { "id": "350g", "label": "350 g", "price": 475 },
+        { "id": "100g", "label": "100 g", "price": 140 }
+      ]
+    },
+    {
+      "id": "lychee",
+      "name": "Lychee Honey",
+      "category": "Honey",
+      "collection": "Seasonal & Limited Harvests",
+      "subtitle": "Sweet & aromatic",
+      "badge": "Limited stock",
+      "photo": "miniFlight",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1099 },
+        { "id": "400g", "label": "400 g", "price": 499, "popular": true },
+        { "id": "350g", "label": "350 g", "price": 449 },
+        { "id": "100g", "label": "100 g", "price": 140 }
+      ]
+    },
+    {
+      "id": "lemon-infused",
+      "name": "Lemon Infused Honey",
+      "category": "Honey",
+      "collection": "Seasonal & Limited Harvests",
+      "subtitle": "Honey infused with lemon",
+      "badge": "Limited stock",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1099 },
+        { "id": "400g", "label": "400 g", "price": 495, "popular": true },
+        { "id": "350g", "label": "350 g", "price": 449 },
+        { "id": "100g", "label": "100 g", "price": 140 }
+      ]
+    },
+    {
+      "id": "dalchini-infused",
+      "name": "Dalchini Infused Honey",
+      "category": "Honey",
+      "collection": "Seasonal & Limited Harvests",
+      "subtitle": "Honey infused with cinnamon",
+      "badge": "Limited stock",
+      "packs": [
+        { "id": "1kg", "label": "1 kg", "price": 1099 },
+        { "id": "400g", "label": "400 g", "price": 495, "popular": true },
+        { "id": "350g", "label": "350 g", "price": 449 },
+        { "id": "100g", "label": "100 g", "price": 140 }
+      ]
+    },
+    {
+      "id": "mini-honey",
+      "name": "Honey Mini Pack",
+      "category": "Honey",
+      "collection": "Mini Pack",
+      "subtitle": "Trial & gifting size",
+      "note": "Filled from available Multiflora, Rosewood or Beri stock. The variety can't be chosen.",
+      "packs": [{ "id": "40g", "label": "40 g", "price": 65 }]
+    },
+    { "id": "wild-forest", "name": "Wild Forest Honey", "category": "Honey", "subtitle": "Deep, earthy & aromatic", "packs": [] },
+    { "id": "mustard", "name": "Mustard Honey", "category": "Honey", "subtitle": "Rich & floral", "packs": [] },
+    { "id": "eucalyptus", "name": "Eucalyptus Honey", "category": "Honey", "subtitle": "Robust & herbal", "packs": [] },
+    { "id": "sunflower", "name": "Sunflower Honey", "category": "Honey", "subtitle": "Mild & smooth", "packs": [] },
+    { "id": "ajwain", "name": "Ajwain Honey", "category": "Honey", "subtitle": "Warm aromatic profile", "packs": [] },
+    { "id": "ghee", "name": "Desi Bilona Ghee", "category": "Ghee & Oils", "subtitle": "Traditional & pure", "packs": [] },
+    { "id": "coconut-oil", "name": "Cold Pressed Coconut Oil", "category": "Ghee & Oils", "subtitle": "Cold pressed", "packs": [] },
+    { "id": "mustard-oil", "name": "Cold Pressed Mustard Oil", "category": "Ghee & Oils", "subtitle": "Kachi ghani style", "packs": [] },
+    { "id": "bee-pollen", "name": "Bee Pollen", "category": "Bee Products", "subtitle": "Nature’s superfood", "packs": [] },
+    { "id": "gulkand", "name": "Honey Gulkand", "category": "Speciality", "subtitle": "Rose petal wellness blend", "packs": [] },
+    { "id": "ber", "name": "Seasonal Ber", "category": "Seasonal Fruits", "subtitle": "Fresh from farms", "packs": [] },
+    { "id": "guava", "name": "Seasonal Guava", "category": "Seasonal Fruits", "subtitle": "Naturally sweet", "packs": [] }
+  ]
+}

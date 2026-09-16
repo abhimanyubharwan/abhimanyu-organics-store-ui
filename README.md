@@ -11,9 +11,7 @@ npm install
 npm start
 ```
 
-Vite serves the site at `http://localhost:5173/abhimanyu-organics-store-ui/`.
-The path includes the repository name because `base` is set for GitHub Pages,
-and the dev server mirrors it so local and deployed behaviour match.
+Vite serves the site at `http://localhost:5173/`.
 
 ## Build
 
@@ -31,7 +29,7 @@ home page (see *Performance* below).
    wide, plus a JPEG fallback, into `public/assets/img/`, and prints each
    photo's pixel size.
 3. Add an entry to `src/media.ts` with that name and size, then reference it —
-   for a product, set `image` in `src/catalog.tsx`.
+   for a product, set its `photo` in `src/catalog.json` to that entry's name.
 
 Render photographs with `<Photo>` (`src/components/Photo.tsx`), never a bare
 `<img>`, and give it an honest `sizes`: it is what lets a phone download a
@@ -83,7 +81,79 @@ For a clip of a different length, change `trim=0:7.0`, `trim=0.5:7.0` and
 - `/bulk`
 - `/wishlist`
 - `/cart`
-- `/account`
+- `/checkout` (accepts `?cancelled=1` after an abandoned Stripe payment)
+- `/order/:id?t=<token>` — an order's confirmation and status page
+- `/account` — explains guest checkout; there are no customer accounts
+- `/refund-policy`, `/privacy-policy`, `/terms-and-conditions`
+
+## Checkout and orders
+
+Customers check out as guests and pay online with **Stripe** or choose
+**Cash on Delivery**. Delivery is free from ₹999 and ₹99 below that.
+
+- **What is for sale and at what price** lives only in
+  [`src/catalog.json`](src/catalog.json): each product's packs and MRPs, the
+  delivery rule and whether COD is offered. A product with an empty `packs`
+  list shows as "coming soon". Change prices there, rebuild, and upload.
+- **The browser never decides a price.** The build copies the catalogue to
+  `/api/catalog.json`, and the PHP API in [`public/api/`](public/api) prices
+  every order from it. Totals sent by the browser are ignored.
+- **Payment is confirmed by Stripe, not by the page.** An order becomes paid
+  only when the server asks Stripe about its Checkout Session, or when Stripe's
+  signed webhook says so — whichever comes first. Each order is emailed once.
+- **Orders are kept on the server** in `private/store.sqlite` (SQLite, created
+  automatically), beside `public_html` where nobody can download it. Include
+  that folder in backups.
+- **Back office:** `/api/admin.php` lists orders and enquiries, marks orders
+  shipped / delivered / cancelled, and has a *Setup check* page. Refunds for
+  online payments are issued in the Stripe dashboard.
+
+### Setting up checkout on Hostinger
+
+1. Upload the build as usual (see *Publishing on Hostinger*).
+2. In File Manager, go **up one level** from `public_html` and create a folder
+   named `private`. Copy [`server/config.example.php`](server/config.example.php)
+   into it as `config.php`.
+3. Fill in `config.php`:
+   - `site_url` — the site's address, e.g. `https://new.abhimanyuorganics.com`.
+   - `stripe_secret_key` — Stripe → Developers → API keys. Use the **test** key
+     (`sk_test_…`) first.
+   - `stripe_webhook_secret` — Stripe → Developers → Webhooks → *Add endpoint*
+     `https://<your-site>/api/stripe-webhook.php` with the events
+     `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+     `checkout.session.async_payment_failed` and `checkout.session.expired`;
+     then copy its signing secret (`whsec_…`).
+   - Email: create a mailbox such as `orders@abhimanyuorganics.com` in
+     hPanel → Emails and put its details under `smtp`.
+   - `admin_password` — at least 12 characters.
+4. Open `https://<your-site>/api/admin.php`, sign in, and check that every line
+   of *Setup check* says OK.
+5. Place a test order with Stripe's test card `4242 4242 4242 4242` (any
+   future date, any CVC), and one Cash on Delivery order. Both should appear in
+   admin and send two emails each.
+6. To take real payments, repeat step 3 with the **live** secret key and a live
+   webhook endpoint. Test and live mode have separate keys and webhook secrets.
+
+Which online payment methods customers see (cards, and UPI where Stripe offers
+it to your account) is controlled in Stripe → Settings → Payment methods.
+
+### Testing checkout locally
+
+PHP 8.1+ with `pdo_sqlite`, `curl`, `openssl` and `mbstring` enabled. Point
+`AO_PRIVATE_DIR` at a folder with a test `config.php` (Stripe **test** key,
+`'mail_transport' => 'log'` so emails go to `outbox.log` instead of being sent),
+then serve the build with the router that stands in for `.htaccess`:
+
+```bash
+npm run build
+```
+
+```bash
+AO_PRIVATE_DIR=/path/to/test-private php -S 127.0.0.1:8080 -t dist scripts/php-router.php
+```
+
+The Vite dev server (`npm start`) has no PHP, so there checkout shows
+"Ordering isn't available right now" — that is expected.
 
 ## Project layout
 
@@ -91,7 +161,12 @@ For a clip of a different length, change `trim=0:7.0`, `trim=0.5:7.0` and
 | --- | --- |
 | `src/pages/` | One component per route |
 | `src/components/` | Header, Footer, ProductCard, ProductImage and the SVG icon set |
-| `src/catalog.tsx` | Product data plus the cart and wishlist context |
+| `src/catalog.json` | What is for sale: products, packs, MRPs, delivery rule, COD on/off |
+| `src/catalog.tsx` | Catalogue helpers plus the cart and wishlist (saved in the browser) |
+| `src/api.ts` | Calls to the PHP order API |
+| `src/policies.ts` | Refund, privacy and terms wording |
+| `public/api/` | PHP order API: orders, order status, Stripe webhook, enquiries, admin |
+| `server/config.example.php` | Template for the private `config.php` on the server |
 | `src/media.ts` | Every real photograph: file name, pixel size, generated widths |
 | `src/components/Photo.tsx` | Responsive AVIF/WebP/JPEG `<picture>` for a media entry |
 | `src/components/StoryFilm.tsx` | The brand film: inline player and the "Watch our story" lightbox |
@@ -99,28 +174,75 @@ For a clip of a different length, change `trim=0:7.0`, `trim=0.5:7.0` and
 | `src/asset.ts` | Builds asset URLs against the configured base path |
 | `src/useReveal.ts` | Scroll-reveal observer, mounted once in `App` |
 | `src/styles.css` | All styling, global and unscoped — the "Royal Honey" theme |
-| `scripts/` | `optimize-images.mjs` (`npm run images`) and `prerender.mjs` |
+| `scripts/` | `optimize-images.mjs` (`npm run images`), `prerender.mjs`, `php-router.php` (local testing) |
 | `media-src/` | Original photographs and the original film clip; not deployed |
 | `public/assets/img/` | Generated photo sizes — do not edit by hand |
 | `public/assets/video/` | The encoded story film (see *The story film*) |
 | `public/fonts/` | Self-hosted Cormorant Garamond and Jost (SIL Open Font License) |
+| `public/.htaccess` | Routing, caching and file types for Apache/LiteSpeed hosting (Hostinger) |
 | `design-reference/` | Design mockups. Never referenced from `src/` — see Notes |
 
-## Hosting on GitHub Pages
+## Publishing on Hostinger
 
-The site is published by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) on every push to `main`.
+The build is plain static files served from a domain root, so it needs a
+Hostinger **web hosting** plan (Premium, Business or Cloud). A Website Builder
+plan cannot host it. There are two ways to publish:
 
-Live URL: https://abhimanyubharwan.github.io/abhimanyu-organics-store-ui/
+**A. Deploy Web App (Business Web Hosting or Cloud) — rebuilds on every push.**
+In hPanel open *Websites → Add Website → Deploy Web App → Import Git
+Repository*, authorise GitHub, pick this repository and set:
+
+| Setting | Value |
+| --- | --- |
+| Framework | React (Vite) |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Node.js version | 22.x or 24.x |
+
+Hostinger writes its own routing rules for this kind of app.
+
+**B. Upload the files (Premium, Business or Cloud) — manual on every change.**
+
+1. Build and package: `npm run build`, then zip the *contents* of `dist/`
+   (not the folder itself). `release/abhimanyu-organics-website.zip` is one
+   made this way; `release/` is not committed. On Windows, create the ZIP with
+   `tar.exe`, not Explorer's "Compress" or PowerShell's `Compress-Archive`,
+   which can store folder paths with backslashes that break on a Linux server:
+
+   ```bash
+   tar -a -c -f release/abhimanyu-organics-website.zip -C dist .htaccess 404.html index.html assets fonts api
+   ```
+
+   The list must include `api` — without it the upload has no checkout.
+
+2. In hPanel: *Websites → Add Website → Custom PHP/HTML website*, and choose
+   the domain or subdomain.
+3. Open *File Manager* for that site, go to `public_html`, upload the ZIP,
+   right-click it → *Extract* into `public_html`, then delete the ZIP.
+   `index.html` and `.htaccess` must sit directly in `public_html`.
+
+[`public/.htaccess`](public/.htaccess) ships in every build. It sends paths
+such as `/shop` to the app, gives missing files a real 404, sets long-lived
+caching for hashed build files, and serves AVIF, WebP and WOFF2 with the right
+types. Turn on *Force HTTPS* for the domain in hPanel.
+
+## Hosting on GitHub Pages (preview copy)
+
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) also publishes
+the site to https://abhimanyubharwan.github.io/abhimanyu-organics-store-ui/ on
+every push to `main`. Once Hostinger is live, consider switching this off so
+search engines do not find two copies of the site.
 
 One-time setup: in the repository, open Settings then Pages, and set Source to
 "GitHub Actions". This needs the Admin role on the repository.
 
 ### How the Pages build differs from a plain build
 
-- `base` in [`vite.config.ts`](vite.config.ts) is `/abhimanyu-organics-store-ui/`,
-  because a project site is served from a sub-path rather than the domain root.
-  Every runtime URL goes through `asset()`, and the router takes the same value
-  as its `basename`.
+- The workflow sets `BASE_PATH=/abhimanyu-organics-store-ui/`, because a
+  project site is served from a sub-path rather than the domain root.
+  [`vite.config.ts`](vite.config.ts) reads it (default `/`), every runtime URL
+  goes through `asset()`, and the router takes the same value as its
+  `basename`.
 - The build writes `404.html` as an empty app shell. GitHub Pages has no
   server-side rewrites, so a direct hit on a deep route such as `/shop` would
   otherwise miss; Pages returns `404.html` instead, and React Router resolves
@@ -131,25 +253,29 @@ One-time setup: in the repository, open Settings then Pages, and set Source to
 
 ### Renaming the repository
 
-Change `base` in [`vite.config.ts`](vite.config.ts) to match the new repository
-name, keeping the leading and trailing slashes. Nothing else hardcodes the path.
+Change `BASE_PATH` in the workflow to match the new repository name, keeping
+the leading and trailing slashes. Nothing else hardcodes the path.
 
 ## Notes
-- Cart and wishlist live in React state only, so they reset on a full page
-  reload. Add persistence or a backend before treating them as real.
-- Bulk query and login are front-end UI demos only; connect them to your
-  backend/CRM/auth provider for production.
+- The cart and wishlist are saved in the visitor's browser (`localStorage`),
+  so they survive reloads on that device but are not shared across devices.
+- The Bulk Orders form saves each enquiry on the server and emails it to
+  `owner_email`. There are no customer logins; `/account` explains guest checkout.
+- The policy pages repeat, word for word, what the Website Builder store
+  published. Their wording has not been reviewed against this store's actual
+  terms (for example, returns within 5 vs 15 days; "Private Limited").
 - `design-reference/` holds full-page design mockups (`mockup-home`,
   `mockup-farm`, `mockup-range`). They are screenshots of the site, not
   photographs, and they used to sit in `public/assets/images/` where the hero
   rendered one as its backdrop — which put a ghosted second copy of the page
   behind the headline. Keep them out of `public/` and out of `src/`.
-- A product with no photograph of its own leaves `image` undefined in
-  `src/catalog.tsx`, and `ProductImage` draws a branded honeycomb tile instead.
+- A product with no photograph of its own has no `photo` in
+  `src/catalog.json`, and `ProductImage` draws a branded honeycomb tile instead.
   Do not point it at a photo of a different jar: the label is legible in every
   shot, so the customer would be looking at a product they will not receive.
-  Thirteen entries are waiting on photography — see *Adding or replacing a
-  photograph* above.
+  Several products on sale (Tulsi, Neem, Lemon and Dalchini infused, Kashmiri
+  Acacia USA, the mini pack) are waiting on photography — see *Adding or
+  replacing a photograph* above.
 
 ## Performance
 

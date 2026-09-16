@@ -1,0 +1,52 @@
+# Abhimanyu Organics — server rules for Apache / LiteSpeed (Hostinger).
+# Vite copies this file into dist/. It must end up in public_html next to
+# index.html. Hostinger's "Deploy Web App" writes its own routing rules and
+# may replace it; a manual upload to a "Custom PHP/HTML website" uses it as is.
+
+Options -Indexes
+
+<IfModule mod_mime.c>
+  AddType image/avif .avif
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+  AddType video/mp4 .mp4
+</IfModule>
+
+# Pages such as /shop or /product/jamun live inside the app, not on disk.
+# Real files are served as they are. Any other path without a file extension
+# gets the app shell (404.html — the name GitHub Pages requires), which then
+# renders the right page in the browser. A missing image or script still
+# returns a genuine 404 instead of a page of HTML.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !\.[A-Za-z0-9]+$
+  RewriteRule ^ 404.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Build files carry a content hash in their name (index-DI1mr7oM.js), so a
+  # changed file always has a new name and the old one can be cached for good.
+  <FilesMatch "-[A-Za-z0-9_-]{8}\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Photos, fonts and the film keep their names when replaced: one week.
+  <FilesMatch "\.(avif|webp|jpe?g|png|svg|woff2|mp4)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+
+  # Pages are re-checked on every visit, so a new upload shows up at once.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript image/svg+xml
+</IfModule>

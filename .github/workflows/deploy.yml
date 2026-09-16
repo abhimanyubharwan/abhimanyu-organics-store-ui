@@ -32,6 +32,10 @@ jobs:
 
       - name: Build (production, base /abhimanyu-organics-store-ui/)
         run: npm run build:pages
+        env:
+          # A GitHub Pages project site lives in a sub-folder; the default "/"
+          # is for hosting at a domain root, such as on Hostinger.
+          BASE_PATH: /abhimanyu-organics-store-ui/
 
       - uses: actions/configure-pages@v6
 
