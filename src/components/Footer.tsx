@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BeeMark } from "./Icons";
+import { BeeMark, Wordmark } from "./Icons";
 
 export default function Footer() {
   return (
@@ -14,8 +14,8 @@ export default function Footer() {
           <div className="foot-brand">
             <BeeMark className="brand-mark" />
             <span className="brand-name">
-              <b>Abhimanyu</b>
-              <b>Organics</b>
+              <span className="visually-hidden">Abhimanyu Organics</span>
+              <Wordmark className="brand-word" />
               <small>Goodness lives here</small>
             </span>
           </div>

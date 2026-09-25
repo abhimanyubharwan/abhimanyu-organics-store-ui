@@ -120,7 +120,7 @@
      the next font in this stack. */
   --sans: "Jost", "Jost Fallback", system-ui, "Segoe UI", Roboto, sans-serif;
 
-  --topbar-h: 36px;
+  --topbar-h: 40px;
   --nav-h: 80px;
   --head-h: calc(var(--topbar-h) + var(--nav-h));
   --radius: 22px;
@@ -430,8 +430,8 @@ h4 {
 }
 
 /* =========================================================================
-   Header — solid ivory with a gold rim; the topbar slides away on scroll
-   (a transform, so scrolling never triggers layout)
+   Header — solid ivory with a gold rim; the announcement ticker stays pinned
+   above the nav on scroll
    ========================================================================= */
 
 .site-head {
@@ -454,44 +454,89 @@ h4 {
   pointer-events: none;
 }
 
-.site-head.solid {
-  transform: translateY(calc(var(--topbar-h) * -1));
-}
-
 .site-head.solid::after {
   opacity: 1;
 }
 
 .topbar {
   height: var(--topbar-h);
-  background: linear-gradient(90deg, var(--royal), var(--royal-2) 50%, var(--royal));
-  color: var(--on-royal-2);
-  font-size: 11.5px;
-  letter-spacing: 0.08em;
+  position: relative;
+  background:
+    linear-gradient(90deg, transparent, rgba(217, 184, 112, 0.1) 50%, transparent),
+    linear-gradient(90deg, var(--royal), var(--royal-2) 50%, var(--royal));
+  border-bottom: 1px solid rgba(217, 184, 112, 0.35);
+  color: var(--on-royal);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Soft fades at both ends so items glide in and out instead of being cut. */
+.topbar::before,
+.topbar::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  width: 72px;
+  background: linear-gradient(90deg, var(--royal), rgba(14, 42, 28, 0));
+  pointer-events: none;
+}
+
+.topbar::after {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+/* Scrolling ticker: two identical runs, moved by Header.tsx on whole pixels. */
+.topbar-track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  will-change: transform;
 }
 
 .topbar-inner {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
 }
 
 .topbar-inner > * {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  padding-inline: 40px;
+  white-space: nowrap;
 }
 
-.topbar-inner > *::before {
-  content: "\25C6";
-  font-size: 6px;
-  color: var(--gold-soft);
+/* Honey-gold icon leading each item, with a faint glow. */
+.topbar-icon {
+  width: 17px;
+  height: 17px;
+  margin-right: 10px;
+  flex: none;
+  color: #f3d58c;
+  filter: drop-shadow(0 0 5px rgba(243, 213, 140, 0.55));
+}
+
+/* Items are flex boxes, which drop the space before <b>; restore it. */
+.topbar b {
+  margin-left: 0.45em;
+  color: #f3d58c;
+  font-weight: 700;
+}
+
+.topbar a {
+  transition: color 0.3s var(--ease);
 }
 
 .topbar a:hover {
-  color: var(--on-royal);
+  color: #f3d58c;
 }
 
 .nav {
@@ -509,26 +554,31 @@ h4 {
   color: var(--ink);
 }
 
+/* Logo bee (1475 × 1368) in honey, with a warm glow so it reads as gold. */
 .brand-mark {
-  width: 42px;
-  height: 42px;
+  width: 50px;
+  height: 46px;
   flex: none;
-  color: var(--honey-500);
+  color: var(--honey-600);
+  filter: drop-shadow(0 3px 6px rgba(201, 138, 31, 0.28));
+  transition: transform 0.5s var(--ease);
 }
 
-.brand-name b {
+.brand:hover .brand-mark {
+  transform: rotate(-6deg) scale(1.06);
+}
+
+/* Logo wordmark (1645 × 339), two stacked lines. */
+.brand-word {
   display: block;
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 17px;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-  line-height: 1.02;
+  width: 142px;
+  height: 29px;
+  color: var(--royal);
 }
 
 .brand-name small {
   display: block;
-  margin-top: 4px;
+  margin-top: 6px;
   font-size: 8.5px;
   font-weight: 500;
   letter-spacing: 0.32em;
@@ -2911,9 +2961,9 @@ footer::before {
 }
 
 .foot-crown-mark {
-  width: 64px;
-  height: 64px;
-  padding: 10px;
+  width: 72px;
+  height: 72px;
+  padding: 14px;
   color: var(--honey-400);
   border-radius: 50%;
   background: var(--royal);
@@ -2961,7 +3011,11 @@ footer::before {
   color: var(--honey-400);
 }
 
-.foot-brand .brand-name b {
+.foot-brand .brand-mark {
+  filter: none;
+}
+
+.foot-brand .brand-word {
   color: var(--on-royal);
 }
 
@@ -4372,12 +4426,8 @@ nav a.menu-only {
 
 @media (max-width: 980px) {
   :root {
-    --topbar-h: 32px;
+    --topbar-h: 38px;
     --nav-h: 70px;
-  }
-
-  .topbar-mid {
-    display: none !important;
   }
 
   .hero {
@@ -4510,7 +4560,7 @@ nav a.menu-only {
 
 @media (max-width: 620px) {
   :root {
-    --topbar-h: 30px;
+    --topbar-h: 36px;
     --nav-h: 64px;
     --radius-lg: 24px;
   }
@@ -4524,15 +4574,23 @@ nav a.menu-only {
   }
 
   .topbar {
-    font-size: 10.5px;
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
   }
 
-  .topbar-inner {
-    justify-content: center;
+  .topbar::before,
+  .topbar::after {
+    width: 32px;
   }
 
-  .topbar-inner > a {
-    display: none;
+  .topbar-inner > * {
+    padding-inline: 24px;
+  }
+
+  .topbar-icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
   }
 
   .nav {
@@ -4545,13 +4603,13 @@ nav a.menu-only {
   }
 
   .brand-mark {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 37px;
   }
 
-  .brand-name b {
-    font-size: 14px;
-    letter-spacing: 0.13em;
+  .brand-word {
+    width: 112px;
+    height: 23px;
   }
 
   .brand-name small {
