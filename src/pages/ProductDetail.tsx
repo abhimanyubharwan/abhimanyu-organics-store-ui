@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Photo from "../components/Photo";
 import ProductImage from "../components/ProductImage";
+import PromiseSeal from "../components/PromiseSeal";
 import QtyStepper from "../components/QtyStepper";
 import { Heart } from "../components/Icons";
 import { media } from "../media";
@@ -139,6 +140,8 @@ function ProductView({ product }: { product: Product }) {
                   <Heart filled={wished} />
                 </button>
               </div>
+
+              <PromiseSeal />
 
               {product.note && <p className="product-note">{product.note}</p>}
 

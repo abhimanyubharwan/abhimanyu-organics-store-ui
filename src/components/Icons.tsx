@@ -147,6 +147,17 @@ export function Jar({ className }: P) {
   );
 }
 
+/** A circular return arrow around a tick: easy returns. */
+export function Returns({ className }: P) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M6.6 16A9.4 9.4 0 1 0 9.4 9.3" {...stroke} />
+      <path d="M9.4 4.6v4.7h4.7" {...stroke} />
+      <path d="m12 16.3 2.8 2.8 5.3-5.6" {...stroke} />
+    </svg>
+  );
+}
+
 export function Book({ className }: P) {
   return (
     <svg className={className} viewBox="0 0 32 32" aria-hidden="true">

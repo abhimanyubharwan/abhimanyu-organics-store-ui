@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { media } from "../media";
+import { HOME_FAQ } from "../faq";
 import type { Post } from "../journal";
 import Photo from "../components/Photo";
 import JournalCover from "../components/JournalCover";
@@ -619,6 +620,29 @@ export default function Home() {
             Send an enquiry <Arrow />
           </Link>
         </div>
+      </section>
+
+      {/* ----------------------------------------------------------------- faq */}
+      <section className="section shell home-faq cv">
+        <div className="section-head centered reveal">
+          <div>
+            <span className="eyebrow ornate">Good to know</span>
+            <h2>Frequently asked questions</h2>
+          </div>
+        </div>
+        <div className="faq-group home-faq-list reveal">
+          {HOME_FAQ.map((item, i) => (
+            <details key={item.q} open={i === 0}>
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))}
+        </div>
+        <p className="home-faq-more reveal">
+          <Link className="link-more" to="/support#faq">
+            See all questions <span>→</span>
+          </Link>
+        </p>
       </section>
     </>
   );

@@ -17,6 +17,7 @@ import {
   Leaf,
   Menu,
   Phone,
+  Returns,
   Truck,
   User,
   Wordmark,
@@ -145,6 +146,10 @@ export default function Header() {
               <span>
                 <Drop className="topbar-icon" />
                 Raw honey, straight from the hive
+              </span>
+              <span>
+                <Returns className="topbar-icon" />
+                Easy 5-day returns on <b>sealed jars</b>
               </span>
               <span>
                 <Leaf className="topbar-icon" />
