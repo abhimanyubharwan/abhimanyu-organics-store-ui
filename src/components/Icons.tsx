@@ -147,6 +147,22 @@ export function Jar({ className }: P) {
   );
 }
 
+export function Book({ className }: P) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 8.5C13 6.2 9 5.5 4.5 6v19c4.5-.5 8.5.2 11.5 2.5 3-2.3 7-3 11.5-2.5V6C23 5.5 19 6.2 16 8.5zM16 8.5v19" {...stroke} />
+    </svg>
+  );
+}
+
+export function ChevronDown({ className }: P) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" aria-hidden="true">
+      <path d="M5.5 8 10 12.5 14.5 8" {...stroke} strokeWidth={1.8} />
+    </svg>
+  );
+}
+
 export function Gift({ className }: P) {
   return (
     <svg className={className} viewBox="0 0 32 32" aria-hidden="true">

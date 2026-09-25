@@ -1,18 +1,42 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useCatalog } from "../catalog";
-import { Bee, BeeMark, Cart, Chat, Drop, Flask, Heart, Leaf, Menu, Phone, Truck, User, Wordmark } from "./Icons";
+import {
+  Bee,
+  BeeMark,
+  Book,
+  Cart,
+  Chat,
+  ChevronDown,
+  Drop,
+  Flask,
+  Gift,
+  Heart,
+  Hive,
+  Jar,
+  Leaf,
+  Menu,
+  Phone,
+  Truck,
+  User,
+  Wordmark,
+} from "./Icons";
 
+// Always visible in the bar.
 const LINKS: [string, string][] = [
   ["/", "Home"],
   ["/shop", "Shop"],
-  ["/shop?cat=Honey", "Honey"],
-  ["/seasonal", "Seasonal Fruits"],
-  ["/gifting", "Gifting"],
   ["/our-story", "Our Story"],
-  ["/blog", "Journal"],
   ["/gallery", "Gallery"],
-  ["/bulk", "Bulk Orders"],
+];
+
+// Tucked under "More" on wide screens; listed in full in the phone menu.
+const MORE_LINKS: [string, string, ComponentType<{ className?: string }>][] = [
+  ["/shop?cat=Honey", "Honey", Jar],
+  ["/seasonal", "Seasonal Fruits", Leaf],
+  ["/gifting", "Gifting", Gift],
+  ["/blog", "Journal", Book],
+  ["/bulk", "Bulk Orders", Hive],
 ];
 
 /** Announcement ticker speed, in CSS pixels per second. */
@@ -24,6 +48,9 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
   const trackRef = useRef<HTMLDivElement>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
+  const inMore = MORE_LINKS.some(([to]) => !to.includes("?") && pathname.startsWith(to));
 
   useEffect(() => {
     let frame = 0;
@@ -42,7 +69,27 @@ export default function Header() {
     };
   }, []);
 
-  useEffect(() => setMenuOpen(false), [pathname]);
+  useEffect(() => {
+    setMenuOpen(false);
+    setMoreOpen(false);
+  }, [pathname]);
+
+  // Close the More menu on an outside click or Escape.
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onDown = (e: PointerEvent) => {
+      if (!moreRef.current?.contains(e.target as Node)) setMoreOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMoreOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [moreOpen]);
 
   // Announcement ticker. Driven from JS rather than a CSS animation so every
   // frame lands on a whole device pixel — sub-pixel offsets blur the text.
@@ -144,6 +191,30 @@ export default function Header() {
               {label}
             </NavLink>
           ))}
+          <div className={moreOpen ? "nav-more open" : "nav-more"} ref={moreRef}>
+            <button
+              type="button"
+              className={inMore ? "nav-more-btn active" : "nav-more-btn"}
+              aria-expanded={moreOpen}
+              aria-haspopup="true"
+              onClick={() => setMoreOpen((v) => !v)}
+            >
+              More
+              <ChevronDown className="nav-more-chevron" />
+            </button>
+            <div className="nav-more-menu">
+              {MORE_LINKS.map(([to, label, Icon]) => (
+                <NavLink
+                  key={label}
+                  to={to}
+                  className={({ isActive }) => (isActive && !to.includes("?") ? "active" : undefined)}
+                >
+                  <Icon className="nav-more-icon" />
+                  {label}
+                </NavLink>
+              ))}
+            </div>
+          </div>
           {/* The top bar carries this link on wide screens; phones hide the top
               bar's links, so the menu gets it instead. */}
           <NavLink to="/support" className={({ isActive }) => (isActive ? "active menu-only" : "menu-only")}>

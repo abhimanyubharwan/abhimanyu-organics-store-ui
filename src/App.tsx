@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AddedToast from "./components/AddedToast";
+import WhatsAppButton from "./components/WhatsAppButton";
 import ScrollToTop from "./ScrollToTop";
 import { useReveal } from "./useReveal";
 import Home from "./pages/Home";
@@ -101,6 +102,7 @@ export default function App() {
       </main>
       <Footer />
       <AddedToast />
+      <WhatsAppButton />
     </>
   );
 }

@@ -623,6 +623,122 @@ nav a.active::after {
   transform: scaleX(1);
 }
 
+/* --- "More" dropdown ---------------------------------------------------- */
+
+.nav-more {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.nav-more-btn:hover,
+.nav-more-btn.active,
+.nav-more.open .nav-more-btn {
+  color: var(--ink);
+}
+
+.nav-more-chevron {
+  width: 15px;
+  height: 15px;
+  color: var(--gold);
+  transition: transform 0.35s var(--ease);
+}
+
+.nav-more.open .nav-more-chevron {
+  transform: rotate(180deg);
+}
+
+/* padding-top bridges the gap, so hover survives the trip to the menu. */
+.nav-more-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 5;
+  min-width: 220px;
+  padding-top: 14px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 6px);
+  transition: opacity 0.25s var(--ease), transform 0.35s var(--ease), visibility 0.25s;
+}
+
+.nav-more-menu::before {
+  content: "";
+  position: absolute;
+  inset: 14px 0 0;
+  z-index: -1;
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--gold-hair), 0 24px 48px -24px rgba(96, 60, 8, 0.45);
+}
+
+.nav-more.open .nav-more-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+@media (hover: hover) and (min-width: 1141px) {
+  .nav-more:hover .nav-more-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+  }
+
+  .nav-more:hover .nav-more-chevron {
+    transform: rotate(180deg);
+  }
+}
+
+.nav-more-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  white-space: nowrap;
+  transition: background 0.25s, color 0.25s;
+}
+
+.nav-more-menu a:first-child {
+  margin-top: 8px;
+}
+
+.nav-more-menu a:last-child {
+  margin-bottom: 8px;
+}
+
+.nav-more-menu a::after {
+  display: none;
+}
+
+.nav-more-menu a:hover,
+.nav-more-menu a.active {
+  background: var(--honey-50);
+}
+
+.nav-more-icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--honey-600);
+}
+
 .nav-actions {
   display: flex;
   gap: 6px;
@@ -3810,13 +3926,112 @@ footer::before {
   color: #7a2a12;
 }
 
+/* --- WhatsApp chat button ------------------------------------------------ */
+
+.wa-float {
+  position: fixed;
+  z-index: 65;
+  right: 22px;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wa-bubble {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #2fe07a, #1ebe5b);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 252, 245, 0.9), 0 14px 30px -10px rgba(18, 140, 64, 0.65);
+  transition: transform 0.4s var(--ease);
+}
+
+.wa-bubble svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* A soft ring that breathes outward, so the button catches the eye. */
+.wa-bubble::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 50%;
+  background: #25d366;
+  animation: wa-pulse 2.4s var(--ease) infinite;
+}
+
+@keyframes wa-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+.wa-label {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--gold-hair), 0 14px 30px -16px rgba(96, 60, 8, 0.5);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.3s var(--ease), transform 0.4s var(--ease);
+  pointer-events: none;
+}
+
+.wa-float:hover .wa-bubble,
+.wa-float:focus-visible .wa-bubble {
+  transform: scale(1.08);
+}
+
+.wa-float:hover .wa-label,
+.wa-float:focus-visible .wa-label {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 620px) {
+  .wa-float {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .wa-bubble {
+    width: 54px;
+    height: 54px;
+  }
+
+  .wa-bubble svg {
+    width: 29px;
+    height: 29px;
+  }
+
+  .wa-label {
+    display: none;
+  }
+}
+
 /* --- toast --------------------------------------------------------------- */
 
 .toast {
   position: fixed;
   z-index: 70;
   right: 22px;
-  bottom: 22px;
+  bottom: 96px; /* clears the WhatsApp button */
   display: flex;
   align-items: center;
   gap: 14px;
@@ -4355,7 +4570,7 @@ nav a.menu-only {
   .toast {
     left: 12px;
     right: 12px;
-    bottom: 12px;
+    bottom: 82px;
     max-width: none;
   }
 
@@ -4386,6 +4601,38 @@ nav a.menu-only {
 
   nav.open {
     display: flex;
+  }
+
+  /* The phone menu lists the More links inline, no dropdown. */
+  .nav-more {
+    display: contents;
+  }
+
+  .nav-more-btn {
+    display: none;
+  }
+
+  .nav-more-menu {
+    display: contents;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-more-menu::before {
+    display: none;
+  }
+
+  .nav-more-menu a,
+  .nav-more-menu a:first-child,
+  .nav-more-menu a:last-child {
+    margin: 0;
+    padding: 8px 0;
+    background: none;
+  }
+
+  .nav-more-menu a:hover,
+  .nav-more-menu a.active {
+    background: none;
   }
 
   nav a::after {
