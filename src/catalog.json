@@ -3,6 +3,19 @@
   "cod": { "enabled": true },
   "products": [
     {
+      "id": "kashmiri-acacia-usa",
+      "name": "Kashmiri Acacia Honey",
+      "category": "Honey",
+      "collection": "Premium Reserve Collection",
+      "subtitle": "In a wooden-lid glass jar",
+      "badge": "Premium Reserve",
+      "photo": "acaciaUsaJar",
+      "gallery": ["acaciaUsaJarBee"],
+      "packs": [
+        { "id": "500g", "label": "500 g", "price": 1199 }
+      ]
+    },
+    {
       "id": "multiflora",
       "name": "Multiflora Honey",
       "category": "Honey",
@@ -58,20 +71,6 @@
         { "id": "400g", "label": "400 g", "price": 659, "popular": true },
         { "id": "350g", "label": "350 g", "price": 595 },
         { "id": "100g", "label": "100 g", "price": 199 }
-      ]
-    },
-    {
-      "id": "kashmiri-acacia-usa",
-      "name": "Kashmiri Acacia Honey (USA)",
-      "category": "Honey",
-      "collection": "Premium Reserve Collection",
-      "subtitle": "Premium reserve",
-      "badge": "Premium",
-      "packs": [
-        { "id": "1kg", "label": "1 kg", "price": 1699 },
-        { "id": "400g", "label": "400 g", "price": 899, "popular": true },
-        { "id": "350g", "label": "350 g", "price": 799 },
-        { "id": "100g", "label": "100 g", "price": 249 }
       ]
     },
     {

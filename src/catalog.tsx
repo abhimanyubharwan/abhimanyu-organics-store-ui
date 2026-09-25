@@ -41,12 +41,15 @@ export interface Product {
    * the customer would be looking at a product they will not receive.
    */
   image?: Media;
+  /** More photographs of the same product, shown as thumbnails on its page. */
+  gallery?: Media[];
   /** Empty for products that are not on sale yet ("coming soon"). */
   packs: Pack[];
 }
 
-interface RawProduct extends Omit<Product, "image"> {
+interface RawProduct extends Omit<Product, "image" | "gallery"> {
   photo?: string;
+  gallery?: string[];
 }
 
 export const settings = {
@@ -55,9 +58,10 @@ export const settings = {
   codEnabled: data.cod.enabled,
 };
 
-export const products: Product[] = (data.products as RawProduct[]).map(({ photo, ...rest }) => ({
+export const products: Product[] = (data.products as RawProduct[]).map(({ photo, gallery, ...rest }) => ({
   ...rest,
   image: photo ? media[photo as keyof typeof media] : undefined,
+  gallery: gallery?.map((key) => media[key as keyof typeof media]),
 }));
 
 /** Old product addresses that still arrive from links and search results. */

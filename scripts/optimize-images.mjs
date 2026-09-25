@@ -14,6 +14,8 @@ import sharp from "sharp";
 const SRC = "media-src";
 const OUT = "public/assets/img";
 const WIDTHS = [360, 640, 1080];
+// Full-bleed photos fill the whole screen, so they get larger sizes too.
+const WIDE = { "hero-meadow": [640, 1080, 1440, 1920] };
 const FALLBACK_WIDTH = 640;
 
 await mkdir(OUT, { recursive: true });
@@ -29,9 +31,10 @@ for (const file of files) {
   before += (await stat(input)).size;
 
   // Every width we can serve without upscaling; always at least one.
-  const widths = WIDTHS.filter((w) => w < width);
-  if (!widths.length || widths.at(-1) < Math.min(width, WIDTHS.at(-1))) {
-    widths.push(Math.min(width, WIDTHS.at(-1)));
+  const wanted = WIDE[name] ?? WIDTHS;
+  const widths = wanted.filter((w) => w < width);
+  if (!widths.length || widths.at(-1) < Math.min(width, wanted.at(-1))) {
+    widths.push(Math.min(width, wanted.at(-1)));
   }
 
   const jobs = [];

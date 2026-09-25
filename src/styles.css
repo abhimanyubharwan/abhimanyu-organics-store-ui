@@ -588,34 +588,37 @@ h4 {
 
 nav {
   display: flex;
-  gap: 26px;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.035em;
+  align-items: center;
+  gap: 34px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 nav a {
   position: relative;
   padding-block: 8px;
-  color: var(--ink-2);
+  color: var(--royal);
   transition: color 0.3s;
 }
 
+/* Honey-gold underline that grows from the centre. */
 nav a::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  height: 2.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--honey-400), var(--honey-600));
   transform: scaleX(0);
   transition: transform 0.45s var(--ease);
 }
 
 nav a:hover,
 nav a.active {
-  color: var(--ink);
+  color: var(--honey-800);
 }
 
 nav a:hover::after,
@@ -640,7 +643,7 @@ nav a.active::after {
   background: none;
   font: inherit;
   letter-spacing: inherit;
-  color: var(--ink-2);
+  color: var(--royal);
   cursor: pointer;
   transition: color 0.3s;
 }
@@ -648,13 +651,13 @@ nav a.active::after {
 .nav-more-btn:hover,
 .nav-more-btn.active,
 .nav-more.open .nav-more-btn {
-  color: var(--ink);
+  color: var(--honey-800);
 }
 
 .nav-more-chevron {
-  width: 15px;
-  height: 15px;
-  color: var(--gold);
+  width: 17px;
+  height: 17px;
+  color: var(--honey-600);
   transition: transform 0.35s var(--ease);
 }
 
@@ -741,32 +744,67 @@ nav a.active::after {
 
 .nav-actions {
   display: flex;
-  gap: 6px;
+  gap: 10px;
   align-items: center;
 }
 
+/* Outlined rounded-square buttons with heavier icons. */
 .icon-btn {
   position: relative;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   display: grid;
   place-items: center;
-  border: 0;
-  background: transparent;
-  border-radius: 999px;
-  color: var(--ink-2);
+  border: 1.5px solid var(--gold-line);
+  background: #fff;
+  border-radius: 14px;
+  color: var(--royal);
   cursor: pointer;
-  transition: color 0.3s, background-color 0.3s;
+  box-shadow: 0 6px 14px -10px rgba(96, 60, 8, 0.45);
+  transition: color 0.3s, background-color 0.3s, border-color 0.3s, transform 0.35s var(--ease);
 }
 
 .icon-btn:hover {
   background: var(--honey-50);
-  color: var(--ink);
+  border-color: var(--honey-500);
+  color: var(--honey-800);
+  transform: translateY(-2px);
 }
 
 .icon-btn svg {
-  width: 19px;
-  height: 19px;
+  width: 21px;
+  height: 21px;
+}
+
+.icon-btn svg * {
+  stroke-width: 2;
+}
+
+/* Primary call to action beside the icons. */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  height: 46px;
+  padding-inline: 24px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--royal-3), var(--royal));
+  color: var(--on-royal);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0 1px rgba(217, 184, 112, 0.45), 0 12px 22px -14px rgba(14, 42, 28, 0.8);
+  transition: transform 0.35s var(--ease);
+}
+
+.nav-cta b {
+  margin-left: 0.3em;
+  color: #f3d58c;
+  font-weight: 700;
+}
+
+.nav-cta:hover {
+  transform: translateY(-2px);
 }
 
 .icon-btn i {
@@ -792,20 +830,20 @@ nav a.active::after {
 }
 
 /* =========================================================================
-   Hero — a sunlit honey room. Layers, back to front:
-   sun glow, light rays, honeycomb, pointer light, the pour.
-   Motion is budgeted, and measured: only the seal ring, the bees, the falling
-   drops and the marquee move. Breathing light, drifting pollen, a floating
-   arch and scroll parallax were all tried and cut — together they halved
-   scrolling frame rate on a throttled CPU.
+   Hero — the meadow photograph, full bleed, with the pour hanging over it.
+   Motion is budgeted, and measured: only the photo's slow drift, the pour
+   and the marquee move. Breathing light, drifting pollen and scroll parallax
+   were all tried and cut — together they halved scrolling frame rate on a
+   throttled CPU.
    ========================================================================= */
 
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: calc(100vh - var(--head-h));
-  min-height: calc(100svh - var(--head-h));
-  padding-block: clamp(120px, 12vw, 150px) clamp(70px, 7vw, 100px);
+  /* As tall as the photo is at full width (1672 × 941), so the whole
+     picture, jar and all, shows uncropped and unstretched. */
+  min-height: calc(100vw * 941 / 1672);
+  padding-block: clamp(84px, 7vw, 120px) clamp(56px, 5vw, 90px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -813,59 +851,41 @@ nav a.active::after {
   background: linear-gradient(180deg, var(--ivory) 0%, var(--ivory-2) 55%, #f8e8c6 100%);
 }
 
-.hero-sky {
+.hero-photo {
   position: absolute;
   inset: 0;
   z-index: -1;
-  pointer-events: none;
+  overflow: hidden;
+  background: #e8c98a;
 }
 
-.hero-sky > * {
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Keep the jar in frame as the screen narrows. */
+  object-position: 68% 50%;
+  animation: hero-drift 28s ease-in-out infinite alternate;
+}
+
+/* A slow, barely-there push-in, like a camera easing towards the jar. Kept
+   small so the whole jar stays in frame. */
+@keyframes hero-drift {
+  to {
+    transform: scale(1.03);
+  }
+}
+
+/* Warm ivory wash: strong behind the words, gone before the jar. A second
+   layer settles the top under the pour and grounds the bottom edge. */
+.hero-photo::after {
+  content: "";
   position: absolute;
-}
-
-.hero-sun {
-  width: 82vw;
-  max-width: 1200px;
-  aspect-ratio: 1;
-  right: -24vw;
-  top: -34vw;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 216, 124, 0.78), rgba(255, 204, 102, 0.36) 45%, rgba(255, 204, 102, 0) 100%);
-}
-
-.hero-rays {
-  inset: -20% -10% 0 20%;
-  background: repeating-conic-gradient(
-    from 208deg at 88% 0%,
-    rgba(255, 225, 150, 0) 0deg 5deg,
-    rgba(255, 225, 150, 0.5) 6.5deg 8deg,
-    rgba(255, 225, 150, 0) 9.5deg 15deg
-  );
-  -webkit-mask-image: radial-gradient(90% 90% at 88% 0%, #000 0%, rgba(0, 0, 0, 0.45) 45%, transparent 75%);
-  mask-image: radial-gradient(90% 90% at 88% 0%, #000 0%, rgba(0, 0, 0, 0.45) 45%, transparent 75%);
-  opacity: 0.8;
-}
-
-.hero-comb {
   inset: 0;
-  background-image: var(--honeycomb);
-  background-size: 76px 132px;
-  opacity: 0.16;
-  -webkit-mask-image: radial-gradient(55% 70% at 74% 52%, #000 10%, transparent 72%);
-  mask-image: radial-gradient(55% 70% at 74% 52%, #000 10%, transparent 72%);
-}
-
-/* Soft light that follows the pointer. Moved with transform by Home.tsx. */
-.hero-spot {
-  left: -280px;
-  top: -280px;
-  width: 560px;
-  height: 560px;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 244, 214, 0.9), rgba(255, 231, 170, 0.35) 50%, transparent);
-  transform: translate3d(70vw, 40vh, 0);
-  opacity: 0.7;
+  background:
+    linear-gradient(270deg, rgba(38, 22, 2, 0.5) 0%, rgba(38, 22, 2, 0.2) 12%, rgba(38, 22, 2, 0) 24%),
+    linear-gradient(180deg, rgba(255, 250, 238, 0.55) 0%, rgba(255, 250, 238, 0) 22%, rgba(255, 250, 238, 0) 78%, rgba(248, 232, 198, 0.55) 100%),
+    linear-gradient(90deg, rgba(255, 250, 238, 0.97) 0%, rgba(255, 250, 238, 0.9) 30%, rgba(255, 250, 238, 0.55) 44%, rgba(255, 250, 238, 0) 60%);
 }
 
 /* The pour — hangs from the header's gold rim. */
@@ -875,23 +895,40 @@ nav a.active::after {
   top: -1px;
   left: 0;
   width: 100%;
-  height: max(140px, calc(100vw * 140 / 1440));
+  height: max(72px, calc(100vw * 72 / 1440));
+  overflow: visible;
+  opacity: 0.85;
   pointer-events: none;
 }
 
-.hero-drip .drop {
+/* Each drip stretches under its own weight, then settles back — slowly, and
+   out of step with its neighbours. */
+.hero-drip .drip {
   transform-box: fill-box;
-  transform-origin: center;
-  opacity: 0;
-  animation: drop-fall 6.5s cubic-bezier(0.55, 0, 0.9, 0.6) infinite;
+  transform-origin: 50% 0;
+  animation: drip-stretch 6s ease-in-out infinite alternate;
 }
 
-.hero-drip .drop-2 {
-  animation-delay: 2.2s;
+@keyframes drip-stretch {
+  to {
+    transform: scaleY(1.09);
+  }
 }
 
-.hero-drip .drop-3 {
-  animation-delay: 4.4s;
+/* A warm glint that drifts along the pour now and then. */
+.hero-drip .honey-glint {
+  animation: honey-glint 9s cubic-bezier(0.45, 0, 0.3, 1) infinite;
+}
+
+@keyframes honey-glint {
+  0%,
+  15% {
+    transform: translateX(0);
+  }
+  85%,
+  100% {
+    transform: translateX(1760px);
+  }
 }
 
 .hero.is-idle *,
@@ -900,49 +937,88 @@ nav a.active::after {
   animation-play-state: paused !important;
 }
 
-.hero-grid {
+/* The copy column spans the hero above the photo; let clicks through to the
+   Watch Our Story button everywhere except the copy itself. */
+.hero-grid.shell {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: 1.04fr 0.96fr;
-  align-items: center;
-  gap: 64px;
+  width: 100%;
+  max-width: none;
+  padding-inline: clamp(24px, 6.5vw, 128px);
+  pointer-events: none;
 }
 
-.hero-copy h1 {
-  margin: 22px 0 26px;
-  text-wrap: balance;
+.hero-copy {
+  max-width: 620px;
+  pointer-events: auto;
+}
+
+.hero-kicker {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.hero-title {
+  margin: 18px 0 24px;
+  font-size: clamp(50px, 6.2vw, 92px);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  color: #1d1408;
+}
+
+/* Upright gold words, not italic, as in the reference. */
+.hero-title .gilt {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.hero-sub {
+  margin: 0;
+  font-size: clamp(16px, 1.35vw, 19px);
+  line-height: 1.65;
+  color: #3c3222;
+}
+
+.hero-sub b {
+  font-weight: 600;
+  color: #1d1408;
 }
 
 .hero-actions {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   margin-top: 36px;
   flex-wrap: wrap;
 }
 
 .hero-proof {
   display: flex;
-  margin-top: 50px;
-  padding-top: 30px;
-  border-top: 1px solid var(--gold-hair);
+  margin-top: 44px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(184, 137, 58, 0.35);
 }
 
 .hero-proof > div {
-  padding-inline: 0 34px;
+  padding-right: 34px;
   margin-right: 34px;
-  border-right: 1px solid var(--gold-hair);
+  border-right: 1px solid rgba(184, 137, 58, 0.35);
 }
 
 .hero-proof > div:last-child {
   border-right: 0;
   margin-right: 0;
+  padding-right: 0;
 }
 
 .hero-proof b {
   display: block;
   font-family: var(--serif);
-  font-size: 38px;
+  font-size: clamp(32px, 2.8vw, 42px);
   font-weight: 600;
   line-height: 1;
   color: var(--gold-deep);
@@ -950,182 +1026,126 @@ nav a.active::after {
 
 .hero-proof small {
   display: block;
-  margin-top: 8px;
-  font-size: 10.5px;
+  margin-top: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: #6b5a3c;
 }
 
-/* --- hero artwork: a royal arch in gold keylines ------------------------ */
-
-.hero-art {
-  position: relative;
-  display: grid;
-  place-items: center;
-  padding: 30px 0;
-}
-
-.arch-glow {
-  position: absolute;
-  width: 130%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 207, 110, 0.7), rgba(255, 207, 110, 0.22) 55%, transparent);
-}
-
-.arch {
-  position: relative;
-  width: min(100%, 440px);
-  aspect-ratio: 4 / 5.3;
-  border-radius: 999px 999px 26px 26px;
-  overflow: hidden;
-  background: var(--parchment);
-  box-shadow:
-    0 0 0 10px var(--ivory),
-    0 0 0 11px var(--gold-line),
-    0 0 0 19px rgba(255, 252, 245, 0.7),
-    0 0 0 20px var(--gold-hair),
-    var(--lift-lg);
-}
-
-.arch img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Warms the photograph into the room's light. */
-.arch::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(255, 214, 120, 0.18), transparent 38%, transparent 70%, rgba(90, 50, 5, 0.22));
-  pointer-events: none;
-}
-
-.medallion {
-  position: absolute;
-  z-index: 3;
-  left: 1%;
-  bottom: 9%;
-  width: 150px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 0 0 6px var(--ivory), 0 0 0 7px var(--gold-line), var(--lift);
-}
-
-.medallion img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.seal {
-  position: absolute;
-  z-index: 4;
-  right: 2%;
-  top: 4%;
-  width: 132px;
-  height: 132px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: var(--gold-deep);
-  background: radial-gradient(circle, var(--ivory) 58%, var(--honey-50));
-  box-shadow: 0 0 0 1px var(--gold-hair), var(--lift);
-}
-
-.seal-ring {
-  position: absolute;
-  inset: 6px;
-  animation: spin 28s linear infinite;
-}
-
-.seal-ring svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.seal-text {
-  font-family: var(--sans);
-  font-size: 8.4px;
-  font-weight: 600;
-  letter-spacing: 0.19em;
-  fill: currentColor;
-}
-
-.seal-core {
-  position: relative;
-  text-align: center;
-  font-family: var(--serif);
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.05;
-  color: var(--ink);
-}
-
-/* Credential chips — ivory cards with a gold rim. */
-.chip {
-  position: absolute;
-  z-index: 3;
-  display: flex;
+.hero-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 11px 17px 11px 13px;
-  border-radius: 999px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--ink);
-  background: rgba(255, 253, 248, 0.96);
-  box-shadow: inset 0 0 0 1px var(--gold-hair), var(--lift-sm);
-  white-space: nowrap;
+  gap: 12px;
+  height: 58px;
+  padding-inline: 32px;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.35s var(--ease), background-color 0.3s;
 }
 
-.chip svg {
+.hero-btn svg {
   width: 18px;
   height: 18px;
-  color: var(--honey-600);
-  flex: none;
+  transition: transform 0.35s var(--ease);
 }
 
-.chip.c1 {
-  left: -6%;
-  top: 22%;
+.hero-btn.primary {
+  background: linear-gradient(135deg, var(--royal-3), var(--royal));
+  color: var(--on-royal);
+  box-shadow: inset 0 0 0 1px rgba(217, 184, 112, 0.35), 0 16px 30px -16px rgba(14, 42, 28, 0.85);
 }
 
-.chip.c2 {
-  right: -4%;
-  bottom: 30%;
+.hero-btn.primary:hover {
+  transform: translateY(-2px);
 }
 
-.chip.c3 {
-  right: 6%;
-  bottom: 4%;
+.hero-btn.primary:hover svg {
+  transform: translateX(4px);
 }
 
-.bee-float {
+.hero-btn.outline {
+  background: rgba(255, 252, 245, 0.88);
+  color: #1d1408;
+  box-shadow: inset 0 0 0 1.5px #1d1408;
+}
+
+.hero-btn.outline:hover {
+  transform: translateY(-2px);
+  background: #fff;
+}
+
+/* Watch Our Story: a glass play button with a handwritten-style label,
+   floating over the right of the photo. */
+.hero-watch {
   position: absolute;
-  z-index: 5;
-  width: 34px;
-  color: var(--honey-500);
-  animation: bee 12s ease-in-out infinite;
+  z-index: 3;
+  right: clamp(24px, 6vw, 110px);
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-align: center;
+  transform: translateY(-50%);
 }
 
-.bee-float.b1 {
-  left: 8%;
-  top: 6%;
+.hero-watch-ring {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: rgba(20, 12, 2, 0.28);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s var(--ease), background-color 0.3s;
 }
 
-.bee-float.b2 {
-  right: 22%;
-  bottom: 18%;
-  width: 26px;
-  animation-delay: -6s;
+/* Soft ring that ripples out, inviting a click. */
+.hero-watch-ring::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  animation: watch-ripple 2.6s var(--ease) infinite;
+}
+
+@keyframes watch-ripple {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+.hero-watch-ring svg {
+  width: 24px;
+  height: 24px;
+  margin-left: 3px;
+}
+
+.hero-watch-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.05;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+
+.hero-watch:hover .hero-watch-ring {
+  transform: scale(1.08);
+  background: rgba(20, 12, 2, 0.4);
 }
 
 /* =========================================================================
@@ -2166,6 +2186,44 @@ nav a.active::after {
   overflow: hidden;
   background: radial-gradient(circle at 50% 38%, #fff6e0, var(--parchment) 70%);
   box-shadow: inset 0 0 0 1px var(--gold-line), inset 0 0 0 9px #fdf4df, inset 0 0 0 10px var(--gold-hair);
+}
+
+/* Photo thumbnails under the stage, for products with more than one shot. */
+.product-thumbs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.product-thumb {
+  width: 76px;
+  height: 76px;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--parchment);
+  box-shadow: 0 0 0 1px var(--gold-hair);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s, transform 0.35s var(--ease);
+}
+
+.product-thumb:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.product-thumb.on {
+  opacity: 1;
+  box-shadow: 0 0 0 2px var(--honey-500);
+}
+
+.product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .product-stage::before {
@@ -3249,41 +3307,6 @@ footer::before {
   }
 }
 
-@keyframes bee {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-  }
-  25% {
-    transform: translate3d(44px, -28px, 0) rotate(9deg);
-  }
-  50% {
-    transform: translate3d(12px, 30px, 0) rotate(-7deg);
-  }
-  75% {
-    transform: translate3d(-36px, -10px, 0) rotate(5deg);
-  }
-}
-
-@keyframes drop-fall {
-  0% {
-    transform: translateY(-4px) scale(0.3);
-    opacity: 0;
-  }
-  12% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  55% {
-    transform: translateY(120px) scale(1, 1.15);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(120px);
-    opacity: 0;
-  }
-}
-
 @keyframes film-in {
   from {
     opacity: 0;
@@ -3308,9 +3331,6 @@ footer::before {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-  }
-  .hero-drip .drop {
-    display: none;
   }
 }
 
@@ -4645,6 +4665,10 @@ nav a.menu-only {
     display: grid;
   }
 
+  .nav-cta {
+    display: none;
+  }
+
   .nav {
     position: relative;
   }
@@ -4666,9 +4690,6 @@ nav a.menu-only {
     max-width: 680px;
     margin-inline: auto;
   }
-  .chip.c1 {
-    left: -2%;
-  }
 }
 
 @media (max-width: 980px) {
@@ -4680,6 +4701,28 @@ nav a.menu-only {
   .hero {
     min-height: 0;
     padding-block: 118px 70px;
+  }
+
+  /* A landscape photo behind a tall column of text would crop to a giant
+     jar, so on narrow screens it becomes a framed picture under the words. */
+  .hero-photo {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    order: 2;
+    width: min(100% - 36px, 640px);
+    margin: 44px auto 0;
+    aspect-ratio: 16 / 10;
+    border-radius: 24px;
+    box-shadow: 0 0 0 1px var(--gold-hair), 0 26px 50px -28px rgba(96, 60, 8, 0.6);
+  }
+
+  .hero-photo::after {
+    display: none;
+  }
+
+  .hero-copy {
+    max-width: none;
   }
 
   .hero-grid,
@@ -4698,36 +4741,25 @@ nav a.menu-only {
     text-align: center;
   }
 
-  .hero-copy .lede {
-    margin-inline: auto;
+  /* Over the meadow on the left of the framed photo, clear of the jar. */
+  .hero-watch {
+    right: auto;
+    left: 18%;
+    transform: translate(-50%, -50%);
+  }
+
+  .hero-watch-ring {
+    width: 60px;
+    height: 60px;
+  }
+
+  .hero-watch-text {
+    font-size: 21px;
   }
 
   .hero-actions,
   .hero-proof {
     justify-content: center;
-  }
-
-  .arch {
-    width: min(74%, 340px);
-  }
-
-  .arch-glow {
-    width: 110%;
-  }
-
-  .medallion {
-    width: 118px;
-    left: 4%;
-  }
-
-  .seal {
-    width: 110px;
-    height: 110px;
-    right: 4%;
-  }
-
-  .hero-spot {
-    display: none;
   }
 
   .story-media {
@@ -4864,12 +4896,13 @@ nav a.menu-only {
   }
 
   .nav-actions {
-    gap: 0;
+    gap: 6px;
   }
 
   .icon-btn {
     width: 38px;
     height: 38px;
+    border-radius: 12px;
   }
 
   .icon-btn svg {
@@ -4892,15 +4925,6 @@ nav a.menu-only {
     padding-block: 104px 56px;
   }
 
-  .hero-drip {
-    height: 110px;
-  }
-
-  .chip,
-  .bee-float.b2 {
-    display: none;
-  }
-
   .hero-proof > div {
     padding-right: 16px;
     margin-right: 16px;
@@ -4915,25 +4939,8 @@ nav a.menu-only {
     letter-spacing: 0.12em;
   }
 
-  .arch {
-    width: min(78%, 300px);
-  }
-
-  .medallion {
-    width: 92px;
-    left: 2%;
-    bottom: 6%;
-  }
-
-  .seal {
-    width: 92px;
-    height: 92px;
-    right: 1%;
-    top: 2%;
-  }
-
-  .seal-core {
-    font-size: 12px;
+  .hero-drip {
+    height: 56px;
   }
 
   .marquee-track span {

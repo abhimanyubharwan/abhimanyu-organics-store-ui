@@ -46,6 +46,8 @@ function ProductView({ product }: { product: Product }) {
   const onSale = isOnSale(product);
   const [packId, setPackId] = useState(defaultPack(product)?.id ?? "");
   const [qty, setQty] = useState(1);
+  const photos = product.image ? [product.image, ...(product.gallery ?? [])] : [];
+  const [shown, setShown] = useState(0);
   const pack = product.packs.find((k) => k.id === packId);
   const hasReadyStock = product.packs.some((k) => k.popular);
   const subtitleRepeatsCollection =
@@ -54,9 +56,31 @@ function ProductView({ product }: { product: Product }) {
   return (
     <>
       <section className="section shell product-page">
-        <div className="product-stage reveal">
-          <ProductImage product={product} sizes="(max-width: 980px) 70vw, 440px" eager />
-          <div className="soft-orbit" />
+        <div className="product-media reveal">
+          <div className="product-stage">
+            {photos.length > 1 ? (
+              <Photo media={photos[shown]} alt={product.name} sizes="(max-width: 980px) 70vw, 440px" priority />
+            ) : (
+              <ProductImage product={product} sizes="(max-width: 980px) 70vw, 440px" eager />
+            )}
+            <div className="soft-orbit" />
+          </div>
+          {photos.length > 1 && (
+            <div className="product-thumbs">
+              {photos.map((photo, i) => (
+                <button
+                  key={photo.name}
+                  type="button"
+                  className={i === shown ? "product-thumb on" : "product-thumb"}
+                  aria-label={`Show photo ${i + 1} of ${photos.length}`}
+                  aria-pressed={i === shown}
+                  onClick={() => setShown(i)}
+                >
+                  <Photo media={photo} alt="" sizes="84px" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="product-info reveal">

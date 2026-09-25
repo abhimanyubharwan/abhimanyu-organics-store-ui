@@ -8,18 +8,7 @@ import ProductCard from "../components/ProductCard";
 import { StoryFilmDialog } from "../components/StoryFilm";
 import ProductImage from "../components/ProductImage";
 import { isOnSale, lowestPrice, rupees, useCatalog } from "../catalog";
-import {
-  Arrow,
-  Bee,
-  Drop,
-  Flask,
-  Gift,
-  Hive,
-  Jar,
-  Leaf,
-  NoSugar,
-  Play,
-} from "../components/Icons";
+import { Arrow, Drop, Gift, Hive, Jar, Leaf, Play } from "../components/Icons";
 
 const FILTERS = [
   "All",
@@ -78,63 +67,165 @@ const JOURNAL: [string, Post["cover"], string, string][] = [
 // [centre x, length, bulb radius] on a 1440-wide canvas. Irregular on purpose:
 // evenly spaced drips read as a pattern, uneven ones read as honey.
 const DRIPS: [number, number, number][] = [
-  [58, 40, 5], [172, 74, 7], [296, 30, 4.5], [428, 102, 8.5], [556, 46, 5.5],
-  [684, 28, 4], [806, 66, 6.5], [936, 118, 9], [1062, 42, 5], [1178, 86, 7.5],
-  [1296, 34, 4.5], [1392, 60, 6],
+  [58, 25, 4], [172, 39, 5.5], [296, 22, 3.5], [428, 52, 6.5], [556, 28, 4],
+  [684, 20, 3], [806, 35, 5], [936, 58, 7], [1062, 25, 3.8], [1178, 44, 6],
+  [1296, 22, 3.5], [1392, 31, 4.5],
 ];
-const BAND = 13;
+// A darker pour hanging behind the front one, peeking out between its drips.
+const BACK_DRIPS: [number, number, number][] = [
+  [110, 29, 3.8], [238, 23, 3.4], [362, 35, 4], [492, 22, 3], [620, 42, 4.5],
+  [742, 25, 3.4], [870, 22, 3], [1000, 38, 4], [1120, 27, 3.4], [1238, 22, 3],
+  [1344, 36, 4],
+];
+const BAND = 11;
 
-function dripPath(): string {
-  let d = `M0 0V${BAND}`;
-  let x = 0;
-  for (const [cx, len, r] of DRIPS) {
-    const cy = len - r;
-    const left = cx - r * 2.6;
-    const right = cx + r * 2.6;
-    // Sag a little between drips, the way a thick pour does.
-    d += `Q${(x + left) / 2} ${BAND + 3} ${left} ${BAND}`;
-    d += `C${cx - r * 1.1} ${BAND} ${cx - r * 0.7} ${cy - r * 2.4} ${cx - r * 0.95} ${cy - r * 0.3}`;
-    d += `A${r} ${r} 0 1 0 ${cx + r * 0.95} ${cy - r * 0.3}`;
-    d += `C${cx + r * 0.7} ${cy - r * 2.4} ${cx + r * 1.1} ${BAND} ${right} ${BAND}`;
-    x = right;
-  }
-  return `${d}Q${(x + 1440) / 2} ${BAND + 3} 1440 ${BAND}V0Z`;
+// A drip's neck and bulb, from where it leaves the band to where it rejoins.
+// Returns the outline and the x where it starts.
+function tongue(cx: number, len: number, r: number, top = BAND): [string, number] {
+  const cy = len - r;
+  const left = cx - r * 2.6;
+  return [
+    `C${cx - r * 1.1} ${top} ${cx - r * 0.7} ${cy - r * 2.4} ${cx - r * 0.95} ${cy - r * 0.3}` +
+    `A${r} ${r} 0 1 0 ${cx + r * 0.95} ${cy - r * 0.3}` +
+    `C${cx + r * 0.7} ${cy - r * 2.4} ${cx + r * 1.1} ${top} ${cx + r * 2.6} ${top}`,
+    left,
+  ];
 }
 
-const DRIP_D = dripPath();
+// The whole pour as one outline: band, sagging between drips, plus every drip.
+function pourPath(drips: [number, number, number][], band: number): string {
+  let d = `M0 0V${band}`;
+  let x = 0;
+  for (const [cx, len, r] of drips) {
+    const [curve, left] = tongue(cx, len, r, band);
+    // Sag a little between drips, the way a thick pour does.
+    d += `Q${(x + left) / 2} ${band + 3.5} ${left} ${band}${curve}`;
+    x = cx + r * 2.6;
+  }
+  return `${d}Q${(x + 1440) / 2} ${band + 3.5} 1440 ${band}V0Z`;
+}
+
+// A single drip on its own, so it can stretch independently. It starts a few
+// units inside the band, which hides the seam.
+function dripPath([cx, len, r]: [number, number, number]): string {
+  const [curve, left] = tongue(cx, len, r);
+  return `M${left} ${BAND - 5}V${BAND}${curve}V${BAND - 5}Z`;
+}
+
+// The band alone: flat across under each drip (the drip covers it) and
+// sagging between them.
+function bandPath(): string {
+  let d = `M0 0V${BAND}`;
+  let x = 0;
+  for (const [cx, , r] of DRIPS) {
+    const left = cx - r * 2.6;
+    d += `Q${(x + left) / 2} ${BAND + 3.5} ${left} ${BAND}H${cx + r * 2.6}`;
+    x = cx + r * 2.6;
+  }
+  return `${d}Q${(x + 1440) / 2} ${BAND + 3.5} 1440 ${BAND}V0Z`;
+}
+
+const FRONT_D = pourPath(DRIPS, BAND);
+const BACK_D = pourPath(BACK_DRIPS, BAND + 2);
+const BAND_D = bandPath();
+
+// Tiny air bubbles caught in the band: [x, y, r].
+const BUBBLES: [number, number, number][] = [
+  [84, 6, 1], [240, 5, 0.8], [352, 7, 1.2], [512, 5, 0.9], [640, 7, 1.1], [760, 5, 0.7],
+  [880, 7, 1], [1010, 5, 1.2], [1130, 7, 0.9], [1240, 5, 1], [1350, 7, 0.8],
+];
 
 function HoneyDrip() {
   return (
     <svg
       className="hero-drip"
-      viewBox="0 0 1440 140"
+      viewBox="0 0 1440 72"
       preserveAspectRatio="xMidYMin slice"
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="honey-pour" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#FFD983" />
-          <stop offset=".35" stopColor="#F0B13D" />
-          <stop offset="1" stopColor="#C97F12" />
+        {/* One gradient in page units, so band and drips shade as one body:
+            pale gold at the surface, deepening to amber at the tips. */}
+        <linearGradient id="honey-body" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="62">
+          <stop offset="0" stopColor="#FFE9B0" />
+          <stop offset=".1" stopColor="#FBC862" />
+          <stop offset=".38" stopColor="#EFA42E" />
+          <stop offset=".72" stopColor="#D1800F" />
+          <stop offset="1" stopColor="#A85C04" />
         </linearGradient>
+        <linearGradient id="honey-back" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="46">
+          <stop offset="0" stopColor="#E8A437" />
+          <stop offset=".5" stopColor="#CF830F" />
+          <stop offset="1" stopColor="#9E5604" />
+        </linearGradient>
+        {/* Bright skin of light along the top surface. */}
+        <linearGradient id="honey-surface" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fff" stopOpacity=".75" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+        {/* The glint that travels along the pour. */}
+        <linearGradient id="honey-sheen" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#fff" stopOpacity="0" />
+          <stop offset=".5" stopColor="#FFF6DA" stopOpacity=".7" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+        <filter id="honey-shadow" x="-5%" y="-20%" width="110%" height="160%">
+          <feGaussianBlur stdDeviation="3.5" />
+        </filter>
+        <clipPath id="honey-clip">
+          <path d={FRONT_D} />
+        </clipPath>
       </defs>
-      <path d={DRIP_D} transform="translate(0 3)" fill="rgba(150, 96, 12, .16)" />
-      <path d={DRIP_D} fill="url(#honey-pour)" />
-      <path d="M0 4.5H1440" stroke="rgba(255,255,255,.5)" strokeWidth="1.4" />
-      {DRIPS.map(([cx, len, r]) => (
-        <ellipse
-          key={cx}
-          cx={cx - r * 0.34}
-          cy={len - r * 1.25}
-          rx={r * 0.26}
-          ry={r * 0.42}
-          fill="rgba(255,255,255,.6)"
-        />
-      ))}
-      {/* Three drops let go of the longest drips, one after another. */}
-      {[DRIPS[3], DRIPS[7], DRIPS[9]].map(([cx, len, r], i) => (
-        <circle key={cx} className={`drop drop-${i + 1}`} cx={cx} cy={len + r * 0.4} r={r * 0.62} fill="#E9A232" />
-      ))}
+
+      {/* Soft warm shadow the pour casts on the page. */}
+      <path d={FRONT_D} transform="translate(0 4)" fill="rgba(140, 80, 6, .22)" filter="url(#honey-shadow)" />
+
+      {/* The deeper pour behind, for depth. */}
+      <path className="honey-back" d={BACK_D} fill="url(#honey-back)" opacity=".9" />
+
+      {/* Front pour: band plus drips that slowly stretch and settle. */}
+      <path d={BAND_D} fill="url(#honey-body)" />
+      {DRIPS.map((drip, i) => {
+        const [cx, len, r] = drip;
+        return (
+          <g
+            key={cx}
+            className="drip"
+            style={{ animationDuration: `${5.5 + (i % 4) * 1.3}s`, animationDelay: `${-i * 0.9}s` }}
+          >
+            <path d={dripPath(drip)} fill="url(#honey-body)" />
+            {/* Glossy highlight on the bulb, and a pin-point glint. */}
+            <ellipse
+              cx={cx - r * 0.38}
+              cy={len - r * 1.2}
+              rx={r * 0.24}
+              ry={r * 0.5}
+              transform={`rotate(-18 ${cx - r * 0.38} ${len - r * 1.2})`}
+              fill="rgba(255, 250, 235, .78)"
+            />
+            <circle cx={cx + r * 0.38} cy={len - r * 0.5} r={r * 0.12} fill="rgba(255, 255, 255, .7)" />
+            {/* Light running down the neck. */}
+            <path
+              d={`M${cx - r * 0.55} ${BAND + 2}C${cx - r * 0.5} ${len - r * 3} ${cx - r * 0.62} ${len - r * 2.2} ${cx - r * 0.6} ${len - r * 1.9}`}
+              stroke="rgba(255, 246, 220, .45)"
+              strokeWidth={Math.max(1, r * 0.16)}
+              strokeLinecap="round"
+              fill="none"
+            />
+          </g>
+        );
+      })}
+
+      {/* Surface light, bubbles and the travelling glint, kept inside the honey. */}
+      <g clipPath="url(#honey-clip)">
+        <rect x="0" y="0" width="1440" height="5" fill="url(#honey-surface)" />
+        {BUBBLES.map(([x, y, r]) => (
+          <circle key={x} cx={x} cy={y} r={r} fill="rgba(255, 248, 225, .5)" />
+        ))}
+        <rect className="honey-glint" x="-320" y="0" width="320" height="72" fill="url(#honey-sheen)" />
+      </g>
+      <path d="M0 1H1440" stroke="rgba(255, 244, 210, .9)" strokeWidth="1.2" />
+
     </svg>
   );
 }
@@ -148,8 +239,8 @@ export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
 
-  // Hero motion. The light follows the pointer by transform alone, and the
-  // hero's animations pause once it scrolls out of view.
+  // The hero's animations (the pour, the slow drift of the photo) pause once
+  // it scrolls out of view.
   //
   // There is deliberately no scroll parallax: measured on a throttled CPU,
   // moving the artwork on every scroll frame cost more smoothness than any
@@ -157,38 +248,11 @@ export default function Home() {
   useEffect(() => {
     const hero = heroRef.current;
     if (!hero) return;
-
     const idle = new IntersectionObserver(([entry]) =>
       hero.classList.toggle("is-idle", !entry.isIntersecting),
     );
     idle.observe(hero);
-
-    const spot = hero.querySelector<HTMLElement>(".hero-spot");
-    const moves =
-      window.matchMedia("(pointer: fine)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!spot || !moves) return () => idle.disconnect();
-
-    let frame = 0;
-    let px = 0;
-    let py = 0;
-    const paint = () => {
-      frame = 0;
-      spot.style.transform = `translate3d(${px}px, ${py}px, 0)`;
-    };
-    const onMove = (e: PointerEvent) => {
-      const r = hero.getBoundingClientRect();
-      px = e.clientX - r.left;
-      py = e.clientY - r.top;
-      if (!frame) frame = requestAnimationFrame(paint);
-    };
-
-    hero.addEventListener("pointermove", onMove);
-    return () => {
-      idle.disconnect();
-      if (frame) cancelAnimationFrame(frame);
-      hero.removeEventListener("pointermove", onMove);
-    };
+    return () => idle.disconnect();
   }, []);
 
   const slide = (dir: 1 | -1) => {
@@ -205,46 +269,60 @@ export default function Home() {
     <>
       {/* ---------------------------------------------------------------- hero */}
       <section className="hero" ref={heroRef}>
-        <div className="hero-sky" aria-hidden="true">
-          <div className="hero-sun" />
-          <div className="hero-rays" />
-          <div className="hero-comb" />
-          <div className="hero-spot" />
+        {/* The photograph fills the hero; a soft ivory wash on the left keeps
+            the headline readable, and fades out before it reaches the jar. */}
+        <div className="hero-photo">
+          <Photo
+            media={media.heroMeadow}
+            alt="A jar of Abhimanyu Organics honey on a wooden table in a sunlit meadow, with beehives and wildflowers behind it"
+            sizes="(max-width: 980px) 640px, 100vw"
+            priority
+          />
+          <Link
+            className="hero-watch"
+            to="/our-story"
+            aria-haspopup="dialog"
+            onClick={(event) => {
+              // A plain click plays the film right here. Modified clicks
+              // (new tab, new window) still open the Our Story page.
+              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              event.preventDefault();
+              setFilmOpen(true);
+            }}
+          >
+            <span className="hero-watch-ring">
+              <Play />
+            </span>
+            <span className="hero-watch-text">
+              Watch
+              <br />
+              Our Story
+            </span>
+          </Link>
         </div>
         <HoneyDrip />
 
         <div className="shell hero-grid">
           <div className="hero-copy">
-            <span className="eyebrow ornate">Pure · Raw · Unprocessed</span>
-            <h1 className="display">
-              Pure honey.
+            <span className="hero-kicker">Pure · Raw · Wild forest blooms</span>
+            <h1 className="hero-title">
+              Pure Honey
               <br />
-              From <em className="gilt">our bees</em>
+              From <em className="gilt">Our Bees</em>
               <br />
-              to your home.
+              To <em className="gilt">Your Home.</em>
             </h1>
-            <p className="lede">
-              Our hives travel with the bloom — mustard in winter, litchi in
-              spring, wild forest through the monsoon. Nothing is heated,
-              nothing is blended, nothing is hurried.
+            <p className="hero-sub">
+              <b>Raw. Unprocessed. Unfiltered.</b>
+              <br />
+              Straight from nature&rsquo;s finest blooms to your family.
             </p>
             <div className="hero-actions">
-              <Link className="btn gold" to="/shop">
-                Shop the harvest <Arrow />
+              <Link className="hero-btn primary" to="/shop?cat=Honey">
+                Shop Honey <Arrow />
               </Link>
-              <Link
-                className="btn ghost"
-                to="/our-story"
-                aria-haspopup="dialog"
-                onClick={(event) => {
-                  // A plain click plays the film right here. Modified clicks
-                  // (new tab, new window) still open the Our Story page.
-                  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                  event.preventDefault();
-                  setFilmOpen(true);
-                }}
-              >
-                <Play /> Watch our story
+              <Link className="hero-btn outline" to="/our-story">
+                Explore Our Story
               </Link>
             </div>
             <div className="hero-proof">
@@ -261,63 +339,6 @@ export default function Home() {
                 <small>Families served</small>
               </div>
             </div>
-          </div>
-
-          <div className="hero-art">
-            <div className="arch-glow" aria-hidden="true" />
-            <div className="arch">
-              <Photo
-                media={media.jarInHand}
-                alt="A jar of Abhimanyu Organics Rosewood honey held in hand"
-                sizes="(max-width: 620px) 300px, (max-width: 980px) 340px, 440px"
-                priority
-              />
-            </div>
-
-            <div className="medallion">
-              <Photo
-                media={media.acaciaBox}
-                alt="Kashmiri Acacia honey in a maroon and gold gift box"
-                sizes="170px"
-              />
-            </div>
-
-            <div className="seal" aria-hidden="true">
-              {/* The ring turns inside an HTML wrapper: rotating the <svg>
-                  itself re-drew the curved text every frame. */}
-              <span className="seal-ring">
-                <svg viewBox="0 0 120 120">
-                  <defs>
-                    <path id="seal-ring" d="M60 60m-47 0a47 47 0 1 1 94 0a47 47 0 1 1-94 0" />
-                  </defs>
-                  <circle cx="60" cy="60" r="58" fill="none" stroke="currentColor" strokeWidth=".8" />
-                  <circle cx="60" cy="60" r="36" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".6" />
-                  <text className="seal-text">
-                    <textPath href="#seal-ring" startOffset="0">
-                      FARM DIRECT ◆ LAB TESTED ◆ NO ADDED SUGAR ◆
-                    </textPath>
-                  </text>
-                </svg>
-              </span>
-              <span className="seal-core">
-                100%
-                <br />
-                Raw &amp; Pure
-              </span>
-            </div>
-
-            <span className="chip c1">
-              <Hive /> Direct from our hives
-            </span>
-            <span className="chip c2">
-              <Flask /> Lab tested, every batch
-            </span>
-            <span className="chip c3">
-              <NoSugar /> Zero added sugar
-            </span>
-
-            <Bee className="bee-float b1" />
-            <Bee className="bee-float b2" />
           </div>
         </div>
       </section>

@@ -234,6 +234,9 @@ export default function Header() {
             <Cart />
             {count > 0 && <i>{count}</i>}
           </Link>
+          <Link className="nav-cta" to="/shop?cat=Honey">
+            Shop <b>Honey</b>
+          </Link>
           <button
             className="icon-btn hamb"
             onClick={() => setMenuOpen((v) => !v)}

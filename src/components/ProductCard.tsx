@@ -23,7 +23,7 @@ export default function ProductCard({
     <article className={onSale ? "product-card reveal" : "product-card reveal is-soon"}>
       <div className="product-media">
         {badge && (
-          <span className={badge === "Premium" ? "badge foil" : badge === "Coming soon" ? "badge soft" : "badge"}>
+          <span className={badge.startsWith("Premium") ? "badge foil" : badge === "Coming soon" ? "badge soft" : "badge"}>
             {badge}
           </span>
         )}

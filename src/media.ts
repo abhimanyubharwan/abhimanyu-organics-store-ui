@@ -37,6 +37,11 @@ export const media = {
   giftTrio: photo("mini-jars", 1536, 2048),
   miniFlight: photo("mini-collection", 1536, 2048),
   acaciaBox: photo("kashmiri", 1697, 2048),
+  /** Premium Reserve Kashmiri Acacia (id kashmiri-acacia-usa): the wooden-lid glass jar, wordmark and bee-mark faces. */
+  acaciaUsaJar: photo("acacia-usa", 1254, 1254),
+  acaciaUsaJarBee: photo("acacia-usa-bee", 1254, 1254),
   /** First frame of public/assets/video/brand-story.mp4 — see <StoryFilm>. */
   storyPoster: photo("brand-story-poster", 720, 1280, [360, 640, 720]),
+  /** Home hero: the Abhimanyu jar on a table in a sunlit bee meadow. */
+  heroMeadow: photo("hero-meadow", 1672, 941, [640, 1080, 1440, 1672]),
 } as const;
